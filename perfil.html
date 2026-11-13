@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta charset='UTF-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>Perfil - Hikari Play</title>
+<link href="css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body {
+    background: #0b0c10;
+    color: #fff;
+    font-family: 'PT Sans', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .social-card {
+    width: 100%;
+    max-width: 420px;
+    background: #15171e;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Botón de volver */
+  .btn-back {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(11, 12, 16, 0.7);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .btn-back:hover { background: #4079ff; }
+
+  /* Botón de editar en esquina derecha */
+  .btn-top-edit {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: rgba(11, 12, 16, 0.7);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .btn-top-edit:hover { background: #4079ff; }
+
+  /* Banner estilo tarjeta gamer */
+  .card-banner {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, #1f2833 0%, #4079ff 100%);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .card-banner::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to top, #15171e, transparent);
+  }
+
+  .card-content {
+    padding: 0 20px 25px 20px;
+    position: relative;
+    margin-top: -45px;
+  }
+
+  /* Fila superior: Avatar + Estado en línea */
+  .header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .avatar-box {
+    position: relative;
+    width: 86px;
+    height: 86px;
+  }
+  .avatar-img {
+    width: 86px;
+    height: 86px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 3px solid #15171e;
+    background: #0b0c10;
+  }
+  .online-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    background: #34c759;
+    border: 3px solid #15171e;
+    border-radius: 50%;
+  }
+
+  /* Botones de acción rápida en la cabecera */
+  .quick-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .action-btn:hover { background: #2a303f; }
+  .action-btn.liked { background: rgba(255, 59, 48, 0.18); color: #ff3b30; border-color: #ff3b30; }
+  .action-btn.friended { background: rgba(52, 199, 89, 0.18); color: #34c759; border-color: #34c759; }
+
+  .user-title {
+    font-size: 1.35rem;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .user-handle {
+    color: #7d8597;
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+  }
+  .user-bio {
+    font-size: 0.9rem;
+    color: #c5c6c7;
+    line-height: 1.4;
+    margin-bottom: 18px;
+  }
+
+  /* Bloques de métricas estilo tarjeta */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .stat-box {
+    background: #1f232e;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    color: #7d8597;
+    margin-top: 2px;
+  }
+
+  /* Sección de Gustos */
+  .section-box {
+    background: #1f232e;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+  }
+  .section-label {
+    font-size: 0.78rem;
+    color: #7d8597;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  .tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag-pill {
+    background: rgba(64, 121, 255, 0.15);
+    color: #6ea0ff;
+    border: 1px solid rgba(64, 121, 255, 0.3);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: bold;
+  }
+
+  .meta-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #7d8597;
+    margin-bottom: 18px;
+    padding: 0 4px;
+  }
+
+  .btn-logout {
+    width: 100%;
+    padding: 11px;
+    background: rgba(255, 59, 48, 0.12);
+    color: #ff453a;
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-logout:hover { background: rgba(255, 59, 48, 0.25); }
+</style>
+</head>
+<body>
+
+<div class="social-card">
+  <a href="index.html" class="btn-back" title="Volver al inicio"><i class="fas fa-arrow-left"></i></a>
+  <a href="editar-perfil.html" class="btn-top-edit"><i class="fas fa-pen"></i> Editar</a>
+
+  <div id="viewBanner" class="card-banner"></div>
+
+  <div class="card-content">
+    <div class="header-row">
+      <div class="avatar-box">
+        <img id="viewAvatar" class="avatar-img" src="img/Logo.png" alt="Avatar">
+        <span class="online-dot" title="En línea"></span>
+      </div>
+
+      <!-- Botones independientes tipo TikTok -->
+      <div class="quick-actions">
+        <button id="btnFriend" class="action-btn" title="Añadir amigo" onclick="toggleFriend()">
+          <i class="fas fa-user-plus"></i>
+        </button>
+        <button id="btnLike" class="action-btn" title="Me gusta" onclick="toggleLike()">
+          <i class="fas fa-heart"></i>
+        </button>
+        <button class="action-btn" title="Mensaje privado" onclick="openPrivateChat()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <h1 id="viewFullname" class="user-title">-</h1>
+    <div id="viewUsername" class="user-handle">@-</div>
+    <p id="viewBio" class="user-bio"></p>
+
+    <!-- Bloques estilo tarjeta social -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div id="likesCount" class="stat-num">0</div>
+        <div class="stat-label">Me gusta</div>
+      </div>
+      <div class="stat-box">
+        <div id="friendsCount" class="stat-num">0</div>
+        <div class="stat-label">Amigos</div>
+      </div>
+      <div class="stat-box">
+        <div id="viewAgeStat" class="stat-num">-</div>
+        <div class="stat-label">Edad</div>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <div class="section-label">Intereses y Gustos</div>
+      <div id="viewLikes" class="tags-wrap"></div>
+    </div>
+
+    <div class="meta-footer">
+      <span><i class="far fa-calendar-alt"></i> Miembro desde: <strong id="viewJoinDate" style="color:#c5c6c7;">-</strong></span>
+    </div>
+
+    <button onclick="logout()" class="btn-logout">Cerrar Sesión</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("hikariUserLoggedIn") !== "true") {
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("viewFullname").textContent = localStorage.getItem("hikariFullname") || "Usuario Hikari";
+  document.getElementById("viewUsername").textContent = "@" + (localStorage.getItem("hikariUsername") || "usuario");
+  document.getElementById("viewBio").textContent = localStorage.getItem("hikariBio") || "Explorando animes y dramas en Hikari Play.";
+  document.getElementById("viewAvatar").src = localStorage.getItem("hikariAvatar") || "img/Logo.png";
+  document.getElementById("viewJoinDate").textContent = localStorage.getItem("hikariJoinDate") || "Noviembre 2026";
+
+  const banner = localStorage.getItem("hikariBanner");
+  if (banner) {
+    document.getElementById("viewBanner").style.backgroundImage = `url(${banner})`;
+  }
+
+  const hideAge = localStorage.getItem("hikariHideAge") === "true";
+  document.getElementById("viewAgeStat").textContent = hideAge ? "Oculta" : (localStorage.getItem("hikariAge") || "18");
+
+  const likes = JSON.parse(localStorage.getItem("hikariLikes") || "[]");
+  const likesContainer = document.getElementById("viewLikes");
+  likesContainer.innerHTML = likes.length 
+    ? likes.map(l => `<span class="tag-pill">${l}</span>`).join('') 
+    : '<span style="color:#7d8597; font-size:0.85rem;">Sin gustos seleccionados</span>';
+
+  // Cargar estados independientes
+  updateInteractionUI();
+});
+
+function toggleLike() {
+  const current = localStorage.getItem("hikariIsLiked") === "true";
+  localStorage.setItem("hikariIsLiked", (!current).toString());
+  updateInteractionUI();
+}
+
+function toggleFriend() {
+  const current = localStorage.getItem("hikariIsFriend") === "true";
+  localStorage.setItem("hikariIsFriend", (!current).toString());
+  updateInteractionUI();
+}
+
+function updateInteractionUI() {
+  const isLiked = localStorage.getItem("hikariIsLiked") === "true";
+  const isFriended = localStorage.getItem("hikariIsFriend") === "true";
+
+  const btnLike = document.getElementById("btnLike");
+  const btnFriend = document.getElementById("btnFriend");
+
+  btnLike.classList.toggle("liked", isLiked);
+  btnFriend.classList.toggle("friended", isFriended);
+
+  document.getElementById("likesCount").textContent = isLiked ? "1" : "0";
+  document.getElementById("friendsCount").textContent = isFriended ? "1" : "0";
+}
+
+function openPrivateChat() {
+  alert("Abriendo sala de chat privado...");
+}
+
+function logout() {
+  localStorage.removeItem("hikariUserLoggedIn");
+  window.location.href = "index.html";
+}
+</script>
+</body>
+</html>

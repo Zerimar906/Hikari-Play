@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta charset='UTF-8' />
+<meta content='width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='IE=edge' http-equiv='X-UA-Compatible' />
+<title>Elfen Lied - Hikari Play</title>
+
+<script>
+window.onload = function() {
+    // Para Internet Explorer
+    document.onselectstart = function(){return false;} 
+    // Para Firefox / Otros
+    document.onmousedown = function(){return false;}
+}
+</script>
+
+<!-- Enlace al CSS local unificado -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="img/Logo.png">
+</head>
+<body id='mainCont'>
+<!-- Script que detecta y aplica el modo oscuro guardado -->
+<script>/*<![CDATA[*/ (localStorage.getItem('mode')) === 'darkmode' ? document.querySelector('#mainCont').classList.add('drK') : document.querySelector('#mainCont').classList.remove('drK') /*]]>*/</script>
+
+<div id="notc"></div>
+<div id="myList"></div>
+
+<div class="storeSP"></div>
+<div class="Wallpaper" style="background-image: linear-gradient(rgba(41, 128, 185, 0), rgb(0, 0, 0)), url(https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/e9131d9dad8d57b750bc1bcc002a96e2.jpe);"></div>
+
+<div class="ConjuntoHeadCont">
+    <div class="SingleHead">
+        <img src="https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/e9131d9dad8d57b750bc1bcc002a96e2.jpe" alt="Elfen Lied" title="Elfen Lied">
+    </div>
+    <span class="movie-section-title" style="color:#7b7b7b;">Elfen Lied</span>
+</div>
+
+<div style="clear: both;"></div>
+
+<div class="info-details">
+    <b><span style="color: #ff000c;">Año:</span></b> <span style="color: #fff;">2004</span><br />
+    <b><span style="color:#4079ff;">Estado:</span></b> <span style="color: #4079ff;">Finalizado</span><br />
+    <b><span style="color: #ff000c;">Géneros:</span></b> <span style="color: #fff;">Acción • Gore</span><br /><br />
+    <b><span style="color: #ff000c;">Sinopsis:</span></b> <span style="color:#7b7b7b;">Los diclonius (humanos con dos pequeños cuernos) son unos mutantes creados por el hombre con un don que se le podría denominar como un sexto sentido. Estos seres tienen el poder necesario como para eliminar toda la humanidad. La humanidad está preocupada, y comienza a estudiarlos para buscar un remedio. Lucy, uno de los diclonius, se escapa de su cámara de contención, matando a todo aquél que se interpone en su camino, hasta caer al mar... Al día siguiente acaba en una playa, donde Kouta y Yuka la encuentran y la alojan en su finca con el nombre de Nyu...</span>
+</div>
+
+<!-- Acordeón de Temporadas y Capítulos -->
+<ul id="accordion" class="accordion">
+    <li>
+        <div class="link"><i class="fa fa-tv"></i>Temporada 1<i class="fa fa-chevron-down"></i></div>
+        <ul class="submenu">
+            <li><a href="https://drive.google.com/file/d/1_cCbqdkf_vPGU7Nj_qHT8-vqF_fr_c2i/preview">Capítulo 1</a></li>
+            <li><a href="#">Capítulo 2</a></li>
+            <li><a href="https://a4.mp4upload.com/files/0/9bndybomu1fepy/video.mp4">Capítulo 3</a></li>
+            <li><a href="https://a1.mp4upload.com/files/3/3resr9wh8q5bl6/video.mp4">Capítulo 4</a></li>
+            <li><a href="https://a4.mp4upload.com/files/1/tk2to6hr0lxuld/video.mp4">Capítulo 5</a></li>
+            <li><a href="https://a1.mp4upload.com/files/8/f89dt4hu51tz32/video.mp4">Capítulo 6</a></li>
+            <li><a href="https://a4.mp4upload.com/files/2/8r95ndua00tdao/video.mp4">Capítulo 7</a></li>
+            <li><a href="https://a1.mp4upload.com/files/0/xv9scldv6yn0as/video.mp4">Capítulo 8</a></li>
+            <li><a href="https://a4.mp4upload.com/files/1/6h9rbpi3kpmkv5/video.mp4">Capítulo 9</a></li>
+            <li><a href="https://a4.mp4upload.com/files/2/17l0466t1o0li7/video.mp4">Capítulo 10</a></li>
+            <li><a href="#">Capítulo 11</a></li>
+            <li><a href="https://ok.ru/videoembed/1619650022115">Capítulo 12</a></li>
+            <li><a href="https://a1.mp4upload.com/files/2/miq1eddljvz2od/video.mp4">Capítulo 13</a></li>
+            <li><a href="https://m20.uqload.co/3rfk22axjvw2q4drdllpn55hafhm2tfuaqcpbxv3jz4be326mlm2scwsrh4a/v.mp4">OVA</a></li>
+        </ul>
+    </li>
+</ul>
+
+<!-- Scripts necesarios -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    var Accordion = function(el, multiple) {
+        this.el = el || {};
+        this.multiple = multiple || false;
+
+        var links = this.el.find('.link');
+        links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown);
+    }
+
+    Accordion.prototype.dropdown = function(e) {
+        var $el = e.data.el,
+            $this = $(this),
+            $next = $this.next();
+
+        $next.slideToggle();
+            $this.parent().toggleClass('open');
+
+        if (!e.data.multiple) {
+            $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+        }
+    }
+
+    var accordion = new Accordion($('#accordion'), false);
+});
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>

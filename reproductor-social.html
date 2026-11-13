@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reproductor Social - Hikari Play</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'PT Sans', sans-serif; }
+  body { background: #000; color: #fff; overflow: hidden; }
+
+  /* Contenedor del Reproductor */
+  .player-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: radial-gradient(circle, #1a1d26 0%, #050505 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+  }
+
+  /* Barra Superior del Reproductor (Igual a tu referencia) */
+  .player-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+    z-index: 20;
+  }
+
+  .episode-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 1.05rem;
+    font-weight: bold;
+  }
+  .episode-title a { color: #fff; text-decoration: none; }
+
+  .top-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .player-icon-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .player-icon-btn:hover { background: #4079ff; }
+
+  .comment-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #4079ff;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 10px;
+  }
+
+  /* Panel Lateral Deslizante de Comentarios (Estilo TikTok) */
+  .comments-drawer {
+    position: absolute;
+    top: 0;
+    right: -360px; /* Oculto por defecto */
+    width: 340px;
+    max-width: 85vw;
+    height: 100%;
+    background: rgba(18, 20, 27, 0.96);
+    backdrop-filter: blur(12px);
+    border-left: 1px solid rgba(255,255,255,0.08);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .comments-drawer.open { right: 0; }
+
+  .drawer-header {
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.95rem;
+  }
+  .close-drawer {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .comments-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .comment-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .comment-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #4079ff;
+    flex-shrink: 0;
+  }
+  .comment-body {
+    background: rgba(255,255,255,0.04);
+    padding: 8px 12px;
+    border-radius: 12px;
+    flex: 1;
+  }
+  .comment-user {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #6ea0ff;
+    cursor: pointer;
+    margin-bottom: 3px;
+    display: inline-block;
+  }
+  .comment-text {
+    font-size: 0.86rem;
+    color: #e0e0e0;
+    line-height: 1.35;
+  }
+
+  /* Caja para escribir comentario */
+  .comment-input-box {
+    padding: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    gap: 8px;
+  }
+  .comment-input-box input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 8px 14px;
+    color: #fff;
+    font-size: 0.85rem;
+    outline: none;
+  }
+  .comment-input-box button {
+    background: #4079ff;
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* Tarjeta Flotante Minimalista de Perfil al tocar un usuario */
+  .mini-profile-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  .mini-profile-modal.show { display: flex; }
+
+  .mini-card {
+    width: 310px;
+    background: #15171e;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    position: relative;
+  }
+  .mini-banner {
+    height: 85px;
+    background: linear-gradient(135deg, #2b32b2, #1488cc);
+    background-size: cover;
+    background-position: center;
+  }
+  .mini-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .mini-content {
+    padding: 0 16px 18px 16px;
+    margin-top: -32px;
+    text-align: center;
+  }
+  .mini-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    border: 3px solid #15171e;
+    object-fit: cover;
+    background: #000;
+  }
+  .mini-name { font-size: 1.1rem; font-weight: bold; margin-top: 6px; }
+  .mini-user { font-size: 0.8rem; color: #7d8597; margin-bottom: 8px; }
+  .mini-bio { font-size: 0.82rem; color: #ccc; margin-bottom: 12px; }
+  .mini-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .mini-tag { background: rgba(64,121,255,0.2); color: #6ea0ff; padding: 3px 9px; border-radius: 12px; font-size: 0.75rem; }
+  .mini-actions { display: flex; justify-content: center; gap: 10px; }
+  .mini-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: #1f232e;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .mini-btn.primary { background: #4079ff; }
+</style>
+</head>
+<body>
+
+<div class="player-wrapper">
+  <!-- Video Simulado -->
+  <div class="video-placeholder">
+    <i class="fas fa-play-circle" style="font-size: 4rem; color: rgba(255,255,255,0.2); margin-bottom: 10px;"></i>
+    <span>Reproduciendo: Estamos muertos T1 E4</span>
+  </div>
+
+  <!-- Barra Superior con el icono de comentarios en la esquina derecha -->
+  <div class="player-top-bar">
+    <div class="episode-title">
+      <a href="index.html"><i class="fas fa-chevron-left"></i></a>
+      <span>Estamos muertos T1 4</span>
+    </div>
+
+    <div class="top-right-controls">
+      <!-- Botón de Comentarios Laterales (Punto marcado en tu captura) -->
+      <button class="player-icon-btn" onclick="toggleComments()" title="Comentarios del episodio">
+        <i class="fas fa-comment-dots"></i>
+        <span id="commentCountBadge" class="comment-badge">2</span>
+      </button>
+      <button class="player-icon-btn" title="Compartir"><i class="fas fa-share-alt"></i></button>
+      <button class="player-icon-btn" title="Ayuda"><i class="fas fa-question"></i></button>
+    </div>
+  </div>
+
+  <!-- Panel Lateral Deslizante -->
+  <div id="commentsDrawer" class="comments-drawer">
+    <div class="drawer-header">
+      <span>Comentarios del Episodio</span>
+      <button class="close-drawer" onclick="toggleComments()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div id="commentsList" class="comments-list"></div>
+
+    <form class="comment-input-box" onsubmit="postComment(event)">
+      <input type="text" id="commentInput" placeholder="Comenta algo del capítulo..." maxlength="150" required>
+      <button type="submit"><i class="fas fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de Tarjeta Flotante al tocar un usuario -->
+<div id="miniProfileModal" class="mini-profile-modal" onclick="closeMiniProfile(event)">
+  <div class="mini-card" onclick="event.stopPropagation()">
+    <button class="mini-close" onclick="document.getElementById('miniProfileModal').classList.remove('show')"><i class="fas fa-times"></i></button>
+    <div id="miniBanner" class="mini-banner"></div>
+    <div class="mini-content">
+      <img id="miniAvatar" class="mini-avatar" src="img/Logo.png">
+      <div id="miniName" class="mini-name">-</div>
+      <div id="miniUser" class="mini-user">@-</div>
+      <div id="miniBio" class="mini-bio">-</div>
+      <div id="miniTags" class="mini-tags"></div>
+      <div class="mini-actions">
+        <button class="mini-btn" onclick="this.style.color='#34c759'"><i class="fas fa-user-plus"></i> Amigo</button>
+        <button class="mini-btn" onclick="this.style.color='#ff3b30'"><i class="fas fa-heart"></i> Like</button>
+        <button class="mini-btn primary" onclick="alert('Abriendo chat privado...')"><i class="fas fa-comment"></i> Chat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Usuarios de ejemplo + usuario actual
+const sampleUsers = {
+  "sakura_chan": {
+    fullname: "Sakura",
+    username: "sakura_chan",
+    avatar: "img/Logo.png",
+    bio: "Fanática de los dramas coreanos y el suspenso.",
+    tags: ["Anime", "Arte", "Música"]
+  },
+  "kenji_kun": {
+    fullname: "Kenji",
+    username: "kenji_kun",
+    avatar: "img/Logo.png",
+    bio: "Maratoneando series de noche.",
+    tags: ["Videojuegos", "Anime", "Tecnología"]
+  }
+};
+
+let commentsData = [
+  { userKey: "sakura_chan", text: "¡Esa escena del pasillo estuvo cardíaca!" },
+  { userKey: "kenji_kun", text: "El mejor capítulo de la temporada sin duda." }
+];
+
+function toggleComments() {
+  document.getElementById("commentsDrawer").classList.toggle("open");
+}
+
+function renderComments() {
+  const list = document.getElementById("commentsList");
+  list.innerHTML = commentsData.map(c => {
+    const u = sampleUsers[c.userKey] || {
+      fullname: localStorage.getItem("hikariFullname") || "Tú",
+      username: localStorage.getItem("hikariUsername") || "usuario",
+      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      bio: localStorage.getItem("hikariBio") || "Miembro de Hikari Play.",
+      tags: JSON.parse(localStorage.getItem("hikariLikes") || '["Anime"]')
+    };
+    return `
+      <div class="comment-item">
+        <img src="${u.avatar}" class="comment-avatar" onclick="openUserCard('${c.userKey}')">
+        <div class="comment-body">
+          <span class="comment-user" onclick="openUserCard('${c.userKey}')">${u.fullname}</span>
+          <div class="comment-text">${c.text}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById("commentCountBadge").textContent = commentsData.length;
+}
+
+function postComment(e) {
+  e.preventDefault();
+  const input = document.getElementById("commentInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  commentsData.push({ userKey: "currentUser", text: text });
+  input.value = "";
+  renderComments();
+}
+
+function openUserCard(userKey) {
+  const u = sampleUsers[userKey] || {
+    fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
+    username: localStorage.getItem("hikariUsername") || "usuario",
+    avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+    bio: localStorage.getItem("hikariBio") || "Explorando Hikari Play.",
+    tags: JSON.parse(localStorage.getItem("hikariLikes") || '["Anime"]')
+  };
+
+  document.getElementById("miniName").textContent = u.fullname;
+  document.getElementById("miniUser").textContent = "@" + u.username;
+  document.getElementById("miniAvatar").src = u.avatar;
+  document.getElementById("miniBio").textContent = u.bio;
+  document.getElementById("miniTags").innerHTML = u.tags.map(t => `<span class="mini-tag">${t}</span>`).join('');
+
+  document.getElementById("miniProfileModal").classList.add("show");
+}
+
+function closeMiniProfile(e) {
+  if (e.target.id === "miniProfileModal") {
+    document.getElementById("miniProfileModal").classList.remove("show");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", renderComments);
+</script>
+</body>
+</html>

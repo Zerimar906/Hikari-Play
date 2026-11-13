@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta charset='UTF-8'/>
+<meta content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' name='viewport'/>
+<title>Buscador - Hikari Play</title>
+
+<style type='text/css'>
+*{margin:0;padding:0;box-sizing:border-box;list-style:none;}
+a{text-decoration:none;}
+body{background:#000;font-family:Nunito,sans-serif;}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr; gap: 10px; padding: 10px;}
+.card{text-align:center;display:block;}
+.card img{width:100%; height:auto; border-radius:7px;}
+.card span{display:block; color:#fff; font-size:0.9rem; margin-top:5px;}
+a{-webkit-tap-highlight-color:transparent;} 
+.form__group{position:relative;padding:15px 0 0;margin:0 auto;margin-top:10px;margin-bottom:1rem;width:90%;}
+.form__field{font-family:inherit;width:100%;border:0;border-bottom:2px solid #ff000c;outline:0;font-size:1.3rem;color:#fff;padding:7px 0;background:0 0;}
+.form__field::placeholder{color:transparent;}
+.form__label{position:absolute;top:0;display:block;font-size:1rem;color:#ff000c;}
+.xaviec{background:#000;position:fixed;top:0;width:100%;z-index:1000;padding-bottom:10px;}
+</style>
+
+<link href='https://fonts.googleapis.com/css2?family=Nunito&display=swap' rel='stylesheet'/>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="img/Logo.png">
+</head>
+<body>
+
+<!-- Barra de búsqueda fija superior -->
+<div class="xaviec">
+  <div class="form__group field">
+    <input autocomplete="off" type="text" class="form__field" placeholder="Buscar" id="myInput" onkeyup="filtrarAnime()" required />
+    <label for="myInput" class="form__label">Escribe el nombre del animé</label>
+  </div>
+</div>
+
+<br><br><br><br>
+
+<!-- Listado de tarjetas -->
+<center>
+  <ul class="cards" id="cards">
+    <li class="anime-item" data-name="elfen lied">
+      <a href="Elfen-Lied.html" class="card">
+        <img alt="Elfen Lied" src="img/Elfen-lied.jpg"/>
+        <span>Elfen Lied</span>
+      </a>
+    </li>
+    <li class="anime-item" data-name="yakuza amo de casa">
+      <a href="go:yakuza" class="card">
+        <img alt="Yakuza" src="img/Yakusa-amo-de-casa.jpg"/>
+        <span>Yakuza amo de casa</span>
+      </a>
+    </li>
+    <li class="anime-item" data-name="vermeil in gold">
+      <a href="go:Vermeil" class="card">
+        <img alt="Vermeil in Gold" src="img/Vermeil-in-Gold.jpg"/>
+        <span>Vermeil in Gold</span>
+      </a>
+    </li>
+  </ul>
+</center>
+
+<!-- Script de búsqueda limpio y funcional -->
+<script>
+function filtrarAnime() {
+    let input = document.getElementById('myInput').value.toLowerCase();
+    let items = document.getElementsByClassName('anime-item');
+
+    for (let i = 0; i < items.length; i++) {
+        let nombre = items[i].getAttribute('data-name');
+        if (nombre.includes(input)) {
+            items[i].style.display = ""; // Muestra la tarjeta si coincide
+        } else {
+            items[i].style.display = "none"; // Oculta por completo si no coincide
+        }
+    }
+}
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>

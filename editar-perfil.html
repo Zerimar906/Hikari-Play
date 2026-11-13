@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta charset='UTF-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>Editar Perfil - Hikari Play</title>
+<link href="css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body {
+    background: #0b0c10;
+    color: #fff;
+    font-family: 'PT Sans', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  /* Misma estética de tarjeta que perfil.html */
+  .social-card {
+    width: 100%;
+    max-width: 420px;
+    background: #15171e;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .btn-back {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(11, 12, 16, 0.7);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .btn-back:hover { background: #4079ff; }
+
+  .btn-top-banner {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: rgba(11, 12, 16, 0.7);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .btn-top-banner:hover { background: #4079ff; }
+
+  .card-banner {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, #1f2833 0%, #4079ff 100%);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .card-banner::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to top, #15171e, transparent);
+  }
+
+  .card-content {
+    padding: 0 20px 25px 20px;
+    position: relative;
+    margin-top: -45px;
+  }
+
+  .avatar-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .avatar-box {
+    position: relative;
+    width: 86px;
+    height: 86px;
+  }
+  .avatar-img {
+    width: 86px;
+    height: 86px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 3px solid #15171e;
+    background: #0b0c10;
+  }
+  .avatar-cam-badge {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #4079ff;
+    color: #fff;
+    border: 2px solid #15171e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .section-box {
+    background: #1f232e;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    color: #7d8597;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  .field-group { margin-bottom: 12px; }
+  .field-group:last-child { margin-bottom: 0; }
+  .field-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: #a0a8b8;
+    margin-bottom: 5px;
+  }
+
+  .clean-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: #15171e;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .clean-input:focus { border-color: #4079ff; }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: #7d8597;
+  }
+
+  /* Desplegable de gustos limpio */
+  .dropdown-wrapper {
+    position: relative;
+  }
+  .dropdown-trigger {
+    width: 100%;
+    padding: 10px 12px;
+    background: #15171e;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.88rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .dropdown-menu {
+    display: none;
+    background: #15171e;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    margin-top: 6px;
+    max-height: 165px;
+    overflow-y: auto;
+    padding: 6px;
+  }
+  .dropdown-menu.open { display: block; }
+  .dropdown-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #c5c6c7;
+  }
+  .dropdown-item:hover { background: rgba(255,255,255,0.05); }
+  .dropdown-item.selected {
+    background: rgba(64, 121, 255, 0.2);
+    color: #6ea0ff;
+    font-weight: bold;
+  }
+
+  .selected-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .tag-pill {
+    background: rgba(64, 121, 255, 0.15);
+    color: #6ea0ff;
+    border: 1px solid rgba(64, 121, 255, 0.3);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tag-pill i { cursor: pointer; }
+
+  .error-msg {
+    color: #ff453a;
+    font-size: 0.78rem;
+    margin-top: 5px;
+    display: none;
+  }
+
+  .btn-save {
+    width: 100%;
+    padding: 12px;
+    background: #4079ff;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+  }
+  .btn-save:hover { background: #3060d0; }
+
+  .btn-delete-account {
+    width: 100%;
+    padding: 11px;
+    background: rgba(255, 59, 48, 0.12);
+    color: #ff453a;
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-delete-account:hover { background: rgba(255, 59, 48, 0.25); }
+
+  /* Ventana Flotante (Modal) de Confirmación de Eliminación */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    width: 100%;
+    max-width: 360px;
+    background: #15171e;
+    border: 1px solid rgba(255, 59, 48, 0.35);
+    border-radius: 16px;
+    padding: 22px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.85);
+  }
+  .modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 59, 48, 0.15);
+    color: #ff453a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto 12px auto;
+  }
+  .modal-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .modal-desc {
+    font-size: 0.85rem;
+    color: #a0a8b8;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .btn-modal-cancel {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #1f232e;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .btn-modal-confirm {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #ff3b30;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .btn-modal-confirm.ready {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="social-card">
+  <a href="perfil.html" class="btn-back" title="Volver al perfil"><i class="fas fa-arrow-left"></i></a>
+  <button type="button" class="btn-top-banner" onclick="document.getElementById('bannerFile').click()">
+    <i class="fas fa-image"></i> Fondo
+  </button>
+  <input type="file" id="bannerFile" accept="image/*" style="display:none">
+
+  <div id="editBanner" class="card-banner"></div>
+
+  <div class="card-content">
+    <div class="avatar-row">
+      <div class="avatar-box">
+        <img id="avatarPreview" class="avatar-img" src="img/Logo.png" alt="Avatar">
+        <label for="avatarFile" class="avatar-cam-badge" title="Cambiar foto">
+          <i class="fas fa-camera"></i>
+        </label>
+        <input type="file" id="avatarFile" accept="image/*" style="display:none">
+      </div>
+      <span style="font-size: 0.82rem; color: #7d8597; font-weight: bold;">Configuración de Cuenta</span>
+    </div>
+    <div id="avatarError" class="error-msg" style="margin-bottom:10px;">⚠️ Imagen no válida. No se permiten desnudos explícitos ni partes íntimas.</div>
+
+    <form id="profileForm">
+      <!-- Bloque Identidad -->
+      <div class="section-box">
+        <div class="section-label">Identidad</div>
+
+        <div class="field-group">
+          <label>Nombre de Usuario Único (@user)</label>
+          <input type="text" id="username" class="clean-input" required placeholder="adalberto01">
+          <div id="userError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
+        </div>
+
+        <div class="field-group">
+          <label>Nombre Visual</label>
+          <input type="text" id="fullname" class="clean-input" required placeholder="Tu Nombre">
+          <div id="nameLockError" class="error-msg">Solo puedes cambiar tu nombre visual cada 7 días.</div>
+        </div>
+
+        <div class="field-group">
+          <label>Edad</label>
+          <input type="number" id="age" class="clean-input" required min="13" max="100">
+          <div class="checkbox-row">
+            <input type="checkbox" id="hideAge">
+            <label for="hideAge" style="margin:0; cursor:pointer;">Ocultar edad en mi perfil público</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque Personalización y Desplegable de Gustos -->
+      <div class="section-box">
+        <div class="section-label">Sobre ti y Gustos</div>
+
+        <div class="field-group">
+          <label>Biografía</label>
+          <textarea id="bio" class="clean-input" rows="2" maxlength="140" placeholder="Cuéntanos algo sobre ti..."></textarea>
+          <div id="bioError" class="error-msg">No se permiten palabras obscenas en el perfil.</div>
+        </div>
+
+        <div class="field-group">
+          <label>Intereses y Gustos (Máximo 3)</label>
+          <div class="dropdown-wrapper">
+            <div class="dropdown-trigger" onclick="toggleDropdown()">
+              <span id="dropdownLabel">Seleccionar gustos...</span>
+              <i class="fas fa-chevron-down" style="font-size:0.75rem; color:#7d8597;"></i>
+            </div>
+            <div id="likesDropdown" class="dropdown-menu"></div>
+          </div>
+          <div id="selectedPills" class="selected-pills"></div>
+          <div id="tagsError" class="error-msg">Solo puedes elegir un máximo de 3 gustos.</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-save">Guardar Cambios</button>
+      <button type="button" class="btn-delete-account" onclick="openDeleteModal()">
+        <i class="fas fa-trash-alt"></i> Eliminar cuenta
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Ventana Flotante de Confirmación para Eliminar Cuenta -->
+<div id="deleteModal" class="modal-overlay" onclick="closeDeleteModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="modal-title">¿Estás seguro de eliminar esta cuenta?</div>
+    <div class="modal-desc">
+      Si eliminas esta cuenta se borrará todo registro de ella de forma permanente. Para confirmar, escribe <strong>CONFIRMAR</strong> abajo:
+    </div>
+    <input type="text" id="confirmDeleteInput" class="clean-input" placeholder="Escribe CONFIRMAR" autocomplete="off" oninput="checkConfirmText()">
+    <div class="modal-actions">
+      <button type="button" class="btn-modal-cancel" onclick="document.getElementById('deleteModal').classList.remove('show')">Cancelar</button>
+      <button type="button" id="btnConfirmDelete" class="btn-modal-confirm" onclick="executeAccountDeletion()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const availableTags = [
+  "Anime", "Dramas", "Música", "Arte", 
+  "Comer chocolate", "Videojuegos", "Tecnología", 
+  "Lectura", "Deportes", "Cosplay", "Manga"
+];
+
+const badWords = ["groseria", "obsceno", "nsfw", "puto", "puta", "mierda"];
+
+let selectedTags = JSON.parse(localStorage.getItem("hikariLikes") || "[]");
+let base64Avatar = localStorage.getItem("hikariAvatar") || "";
+let base64Banner = localStorage.getItem("hikariBanner") || "";
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("hikariUserLoggedIn") !== "true") {
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("username").value = localStorage.getItem("hikariUsername") || "";
+  document.getElementById("fullname").value = localStorage.getItem("hikariFullname") || "";
+  document.getElementById("age").value = localStorage.getItem("hikariAge") || "";
+  document.getElementById("hideAge").checked = localStorage.getItem("hikariHideAge") === "true";
+  document.getElementById("bio").value = localStorage.getItem("hikariBio") || "";
+
+  if (base64Avatar) document.getElementById("avatarPreview").src = base64Avatar;
+  if (base64Banner) document.getElementById("editBanner").style.backgroundImage = `url(${base64Banner})`;
+
+  renderDropdown();
+  renderPills();
+});
+
+// Control del menú desplegable de gustos
+function toggleDropdown() {
+  document.getElementById("likesDropdown").classList.toggle("open");
+}
+
+function renderDropdown() {
+  const menu = document.getElementById("likesDropdown");
+  menu.innerHTML = availableTags.map(tag => {
+    const isSelected = selectedTags.includes(tag);
+    return `
+      <div class="dropdown-item ${isSelected ? 'selected' : ''}" onclick="selectTag('${tag}')">
+        <span>${tag}</span>
+        ${isSelected ? '<i class="fas fa-check"></i>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function selectTag(tag) {
+  const error = document.getElementById("tagsError");
+  if (selectedTags.includes(tag)) {
+    selectedTags = selectedTags.filter(t => t !== tag);
+    error.style.display = "none";
+  } else {
+    if (selectedTags.length >= 3) {
+      error.style.display = "block";
+      return;
+    }
+    selectedTags.push(tag);
+    error.style.display = "none";
+  }
+  renderDropdown();
+  renderPills();
+}
+
+function renderPills() {
+  const container = document.getElementById("selectedPills");
+  const label = document.getElementById("dropdownLabel");
+  
+  label.textContent = selectedTags.length > 0 
+    ? `${selectedTags.length}/3 seleccionados` 
+    : "Seleccionar gustos...";
+
+  container.innerHTML = selectedTags.map(tag => `
+    <span class="tag-pill">${tag} <i class="fas fa-times" onclick="selectTag('${tag}')"></i></span>
+  `).join('');
+}
+
+// Carga de imágenes
+document.getElementById("avatarFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      base64Avatar = ev.target.result;
+      document.getElementById("avatarPreview").src = base64Avatar;
+      document.getElementById("avatarError").style.display = "none";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+document.getElementById("bannerFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      base64Banner = ev.target.result;
+      document.getElementById("editBanner").style.backgroundImage = `url(${base64Banner})`;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Guardar Cambios y actualizar base de datos persistente
+document.getElementById("profileForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
+
+  const newUsername = document.getElementById("username").value.trim().toLowerCase();
+  const oldUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
+  const newFullname = document.getElementById("fullname").value.trim();
+  const oldFullname = localStorage.getItem("hikariFullname");
+  const bioText = document.getElementById("bio").value;
+
+  // 1. Validar obscenidades
+  const fullCheck = (newUsername + " " + newFullname + " " + bioText).toLowerCase();
+  if (badWords.some(w => fullCheck.includes(w))) {
+    document.getElementById("bioError").style.display = "block";
+    return;
+  }
+
+  // 2. Validar unicidad de @username si cambió
+  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+  if (newUsername !== oldUsername) {
+    if (usernamesList.includes(newUsername)) {
+      document.getElementById("userError").style.display = "block";
+      return;
+    }
+    usernamesList = usernamesList.filter(u => u !== oldUsername);
+    usernamesList.push(newUsername);
+    localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+  }
+
+  // 3. Validar regla de 7 días para nombre visual
+  const now = Date.now();
+  const lastChange = parseInt(localStorage.getItem("hikariLastNameChange") || "0");
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  if (oldFullname && oldFullname !== newFullname && (now - lastChange < SEVEN_DAYS)) {
+    document.getElementById("nameLockError").style.display = "block";
+    return;
+  }
+  if (oldFullname !== newFullname) {
+    localStorage.setItem("hikariLastNameChange", now.toString());
+  }
+
+  // Guardar en sesión activa
+  localStorage.setItem("hikariUsername", newUsername);
+  localStorage.setItem("hikariFullname", newFullname);
+  localStorage.setItem("hikariAge", document.getElementById("age").value);
+  localStorage.setItem("hikariHideAge", document.getElementById("hideAge").checked);
+  localStorage.setItem("hikariBio", bioText);
+  localStorage.setItem("hikariLikes", JSON.stringify(selectedTags));
+  if (base64Avatar) localStorage.setItem("hikariAvatar", base64Avatar);
+  if (base64Banner) localStorage.setItem("hikariBanner", base64Banner);
+
+  // Sincronizar con la base de datos permanente por correo
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  for (let emailKey in usersDb) {
+    if (usersDb[emailKey].username === oldUsername || usersDb[emailKey].username === newUsername) {
+      usersDb[emailKey] = {
+        ...usersDb[emailKey],
+        username: newUsername,
+        fullname: newFullname,
+        age: document.getElementById("age").value,
+        hideAge: document.getElementById("hideAge").checked,
+        bio: bioText,
+        likes: selectedTags,
+        avatar: base64Avatar,
+        banner: base64Banner
+      };
+      break;
+    }
+  }
+  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+
+  window.location.href = "perfil.html";
+});
+
+// Lógica de Ventana Flotante para Eliminar Cuenta
+function openDeleteModal() {
+  document.getElementById("confirmDeleteInput").value = "";
+  document.getElementById("btnConfirmDelete").classList.remove("ready");
+  document.getElementById("deleteModal").classList.add("show");
+}
+
+function closeDeleteModal(e) {
+  if (e.target.id === "deleteModal") {
+    document.getElementById("deleteModal").classList.remove("show");
+  }
+}
+
+function checkConfirmText() {
+  const val = document.getElementById("confirmDeleteInput").value.trim();
+  const btn = document.getElementById("btnConfirmDelete");
+  if (val === "CONFIRMAR") {
+    btn.classList.add("ready");
+  } else {
+    btn.classList.remove("ready");
+  }
+}
+
+function executeAccountDeletion() {
+  if (document.getElementById("confirmDeleteInput").value.trim() !== "CONFIRMAR") return;
+
+  const currentUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
+
+  // 1. Borrar de la lista global de @usernames
+  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+  usernamesList = usernamesList.filter(u => u !== currentUsername);
+  localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+  // 2. Borrar de la base de datos permanente de correos
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  for (let emailKey in usersDb) {
+    if (usersDb[emailKey].username === currentUsername) {
+      delete usersDb[emailKey];
+      break;
+    }
+  }
+  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+
+  // 3. Limpiar datos de sesión activa
+  const keysToRemove = [
+    "hikariUserLoggedIn", "hikariAuthProvider", "hikariUsername",
+    "hikariFullname", "hikariAge", "hikariHideAge", "hikariBio",
+    "hikariLikes", "hikariAvatar", "hikariBanner", "hikariJoinDate",
+    "hikariLastNameChange", "hikariIsLiked", "hikariIsFriend"
+  ];
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+
+  window.location.href = "index.html";
+}
+</script>
+</body>
+</html>

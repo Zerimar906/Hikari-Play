@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es' translate='no'>
+<head>
+<meta charset='UTF-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>Acceso - Hikari Play</title>
+<link href="css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body {
+    background: #0b0c10;
+    color: #fff;
+    font-family: 'PT Sans', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #15171e;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    box-sizing: border-box;
+  }
+  .btn-back-absolute {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: #7d8597;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .btn-back-absolute:hover { color: #fff; }
+  .login-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 10px;
+  }
+  .login-title span { color: #4079ff; }
+  
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.85rem; color: #7d8597; margin-bottom: 6px; font-weight: bold; }
+  .form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    color: #fff;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+  }
+  .form-group input:focus { border-color: #4079ff; outline: none; }
+  
+  .error-msg { color: #ff453a; font-size: 0.82rem; margin-top: 6px; display: none; font-weight: bold; }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #4079ff;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: #3060d0; }
+
+  .extra-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-top: 18px;
+  }
+  .extra-links a { color: #6ea0ff; text-decoration: none; }
+  .extra-links a:hover { text-decoration: underline; }
+
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    color: #7d8597;
+    font-size: 0.85rem;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 32%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  .oauth-providers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-oauth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+  }
+  .btn-oauth:hover { opacity: 0.85; }
+  .btn-google { background: #db4437; }
+  .btn-discord { background: #5865f2; }
+  .btn-github { background: #24292e; }
+
+  .btn-dev-clear {
+    background: rgba(255, 59, 48, 0.08);
+    border: 1px dashed rgba(255, 59, 48, 0.3);
+    color: #ff453a;
+    font-size: 0.78rem;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 22px;
+    width: 100%;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .btn-dev-clear:hover {
+    background: rgba(255, 59, 48, 0.18);
+  }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <a href="index.html" class="btn-back-absolute" title="Volver"><i class="fas fa-arrow-left"></i></a>
+  
+  <div class="login-title">Hikari<span>Play</span></div>
+
+  <form id="authForm">
+    <div class="form-group" id="usernameGroup" style="display:none;">
+      <label>Nombre de Usuario Único (@user)</label>
+      <input type="text" id="regUsername" placeholder="ej: adalberto01">
+      <div id="usernameTakenError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Correo electrónico</label>
+      <input type="email" id="email" required placeholder="tu@correo.com">
+      <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
+      <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
+    </div>
+    
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="password" required placeholder="••••••••">
+    </div>
+
+    <button type="submit" id="submitBtn" class="btn-submit">Ingresar</button>
+  </form>
+
+  <div class="extra-links">
+    <a href="#" id="toggleModeBtn" onclick="toggleMode(event)">¿No tienes cuenta? Regístrate</a>
+    <a href="#" onclick="alert('Se ha enviado un enlace de recuperación a tu correo.')">¿Olvidaste tu contraseña?</a>
+  </div>
+
+  <div class="divider">o conéctate con</div>
+
+  <div class="oauth-providers">
+    <button type="button" onclick="redirectToOfficialOAuth('Google')" class="btn-oauth btn-google">
+      <i class="fab fa-google"></i> Continuar con Google
+    </button>
+    <button type="button" onclick="redirectToOfficialOAuth('Discord')" class="btn-oauth btn-discord">
+      <i class="fab fa-discord"></i> Continuar con Discord
+    </button>
+    <button type="button" onclick="redirectToOfficialOAuth('GitHub')" class="btn-oauth btn-github">
+      <i class="fab fa-github"></i> Continuar con GitHub
+    </button>
+  </div>
+
+  <button type="button" class="btn-dev-clear" onclick="clearAllRegisteredAccounts()">
+    <i class="fas fa-trash"></i> Borrar todas las cuentas registradas
+  </button>
+</div>
+
+<script>
+// URL FIJA Y EXACTA DE GITHUB PAGES EN MINÚSCULAS
+const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html";
+
+const OAUTH_CONFIG = {
+  Google: {
+    clientId: "TU_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+    authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    scope: "email profile",
+    responseType: "token"
+  },
+  Discord: {
+    clientId: "1570716113753608293",
+    authUrl: "https://discord.com/api/oauth2/authorize",
+    scope: "identify email",
+    responseType: "token"
+  },
+  GitHub: {
+    clientId: "TU_GITHUB_CLIENT_ID",
+    authUrl: "https://github.com/login/oauth/authorize",
+    scope: "user:email",
+    responseType: "code"
+  }
+};
+
+let isRegistering = false;
+
+function clearErrors() {
+  document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
+}
+
+function toggleMode(e) {
+  e.preventDefault();
+  isRegistering = !isRegistering;
+  clearErrors();
+  
+  const userGroup = document.getElementById("usernameGroup");
+  const submitBtn = document.getElementById("submitBtn");
+  const toggleBtn = document.getElementById("toggleModeBtn");
+
+  if (isRegistering) {
+    userGroup.style.display = "block";
+    document.getElementById("regUsername").setAttribute("required", "true");
+    submitBtn.textContent = "Registrarse";
+    toggleBtn.textContent = "¿Ya tienes cuenta? Inicia sesión";
+  } else {
+    userGroup.style.display = "none";
+    document.getElementById("regUsername").removeAttribute("required");
+    submitBtn.textContent = "Ingresar";
+    toggleBtn.textContent = "¿No tienes cuenta? Regístrate";
+  }
+}
+
+// 1. Redirigir a la página oficial usando siempre el enlace de GitHub Pages
+function redirectToOfficialOAuth(provider) {
+  const config = OAUTH_CONFIG[provider];
+  sessionStorage.setItem("pendingOAuthProvider", provider);
+  
+  const encodedRedirect = encodeURIComponent(GITHUB_REDIRECT_URI);
+  const targetUrl = `${config.authUrl}?client_id=${config.clientId}&redirect_uri=${encodedRedirect}&response_type=${config.responseType}&scope=${encodeURIComponent(config.scope)}`;
+  
+  window.location.href = targetUrl;
+}
+
+// 2. Recibir la confirmación de Discord/Google y obtener los datos reales de la cuenta
+window.addEventListener("DOMContentLoaded", async () => {
+  const hash = window.location.hash;
+  const search = window.location.search;
+  const pendingProvider = sessionStorage.getItem("pendingOAuthProvider");
+
+  if (pendingProvider && (hash.includes("access_token=") || search.includes("code="))) {
+    sessionStorage.removeItem("pendingOAuthProvider");
+    
+    let accessToken = "";
+    if (hash.includes("access_token=")) {
+      const params = new URLSearchParams(hash.substring(1));
+      accessToken = params.get("access_token");
+    }
+
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    let realEmail = "";
+    let realUsername = "";
+    let realFullname = "";
+    let realAvatar = "";
+
+    if (pendingProvider === "Discord" && accessToken) {
+      try {
+        const res = await fetch("https://discord.com/api/users/@me", {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const discordUser = await res.json();
+        
+        if (discordUser && discordUser.id) {
+          realUsername = discordUser.username.toLowerCase().replace(/[^a-z0-9_]/g, "");
+          realEmail = discordUser.email ? discordUser.email.toLowerCase() : `${realUsername}_discord@oauth.local`;
+          realFullname = discordUser.global_name || discordUser.username;
+          if (discordUser.avatar) {
+            realAvatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
+          }
+        }
+      } catch (err) {
+        console.error("Error leyendo perfil de Discord:", err);
+      }
+    }
+
+    if (!realEmail) {
+      realUsername = pendingProvider.toLowerCase() + "_" + Math.floor(Math.random() * 9000 + 1000);
+      realEmail = `${realUsername}@${pendingProvider.toLowerCase()}.oauth`;
+      realFullname = "Usuario " + pendingProvider;
+    }
+
+    let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+    let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariAuthProvider", pendingProvider);
+    localStorage.setItem("hikariCurrentEmail", realEmail);
+
+    if (usersDb[realEmail]) {
+      const existing = usersDb[realEmail];
+      localStorage.setItem("hikariUsername", existing.username);
+      localStorage.setItem("hikariFullname", existing.fullname || realFullname);
+      if (existing.avatar) localStorage.setItem("hikariAvatar", existing.avatar);
+      if (existing.banner) localStorage.setItem("hikariBanner", existing.banner);
+      if (existing.bio) localStorage.setItem("hikariBio", existing.bio);
+      if (existing.age) localStorage.setItem("hikariAge", existing.age);
+      if (existing.likes) localStorage.setItem("hikariLikes", JSON.stringify(existing.likes));
+
+      alert(`✅ ¡Bienvenido de nuevo! Sesión iniciada con tu cuenta de ${pendingProvider}.`);
+      window.location.href = "perfil.html";
+    } else {
+      if (usernamesList.includes(realUsername)) {
+        realUsername = realUsername + "_" + Math.floor(Math.random() * 999);
+      }
+
+      const joinDate = new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+      usersDb[realEmail] = {
+        email: realEmail,
+        username: realUsername,
+        fullname: realFullname,
+        avatar: realAvatar,
+        provider: pendingProvider,
+        joinDate: joinDate
+      };
+
+      usernamesList.push(realUsername);
+      localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+      localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+      localStorage.setItem("hikariUsername", realUsername);
+      localStorage.setItem("hikariFullname", realFullname);
+      if (realAvatar) localStorage.setItem("hikariAvatar", realAvatar);
+      localStorage.setItem("hikariJoinDate", joinDate);
+
+      alert(`✅ Cuenta vinculada con ${pendingProvider}. Completa tu perfil para terminar.`);
+      window.location.href = "editar-perfil.html";
+    }
+  }
+});
+
+// 3. Manejo del formulario tradicional (Correo y Contraseña)
+document.getElementById("authForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const emailInput = document.getElementById("email").value.trim().toLowerCase();
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+
+  if (isRegistering) {
+    const usernameInput = document.getElementById("regUsername").value.trim().toLowerCase();
+
+    if (usersDb[emailInput]) {
+      document.getElementById("emailExistsError").style.display = "block";
+      return;
+    }
+
+    if (usernamesList.includes(usernameInput)) {
+      document.getElementById("usernameTakenError").style.display = "block";
+      return;
+    }
+
+    const joinDate = new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    usersDb[emailInput] = {
+      email: emailInput,
+      username: usernameInput,
+      fullname: usernameInput,
+      joinDate: joinDate
+    };
+
+    localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+    usernamesList.push(usernameInput);
+    localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariCurrentEmail", emailInput);
+    localStorage.setItem("hikariUsername", usernameInput);
+    localStorage.setItem("hikariFullname", usernameInput);
+    localStorage.setItem("hikariJoinDate", joinDate);
+
+    window.location.href = "editar-perfil.html";
+
+  } else {
+    if (!usersDb[emailInput]) {
+      document.getElementById("emailError").style.display = "block";
+      return;
+    }
+
+    const userData = usersDb[emailInput];
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariCurrentEmail", emailInput);
+    localStorage.setItem("hikariUsername", userData.username);
+    localStorage.setItem("hikariFullname", userData.fullname || "Usuario");
+    if (userData.avatar) localStorage.setItem("hikariAvatar", userData.avatar);
+    if (userData.banner) localStorage.setItem("hikariBanner", userData.banner);
+    if (userData.bio) localStorage.setItem("hikariBio", userData.bio);
+    if (userData.age) localStorage.setItem("hikariAge", userData.age);
+    if (userData.likes) localStorage.setItem("hikariLikes", JSON.stringify(userData.likes));
+
+    window.location.href = "perfil.html";
+  }
+});
+
+// 4. Función para borrar todas las cuentas registradas
+function clearAllRegisteredAccounts() {
+  if (confirm("¿Seguro que quieres borrar TODAS las cuentas y nombres de usuario registrados en la app?")) {
+    localStorage.clear();
+    alert("✅ Todas las cuentas registradas han sido eliminadas.");
+    window.location.reload();
+  }
+}
+</script>
+</body>
+</html>
