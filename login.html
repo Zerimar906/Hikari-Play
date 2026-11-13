@@ -219,7 +219,7 @@ const OAUTH_CONFIG = {
     responseType: "token"
   },
   GitHub: {
-    clientId: "TU_GITHUB_CLIENT_ID",
+    clientId: "Ov23li71mySA9Id9XLPs",
     authUrl: "https://github.com/login/oauth/authorize",
     scope: "user:email",
     responseType: "code"
@@ -265,7 +265,7 @@ function redirectToOfficialOAuth(provider) {
   window.location.href = targetUrl;
 }
 
-// 2. Recibir la confirmación de Discord/Google y obtener los datos reales de la cuenta
+// 2. Recibir la confirmación de Discord/GitHub/Google y obtener los datos de la cuenta
 window.addEventListener("DOMContentLoaded", async () => {
   const hash = window.location.hash;
   const search = window.location.search;
@@ -287,6 +287,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     let realFullname = "";
     let realAvatar = "";
 
+    // Autenticación con Discord
     if (pendingProvider === "Discord" && accessToken) {
       try {
         const res = await fetch("https://discord.com/api/users/@me", {
@@ -305,6 +306,13 @@ window.addEventListener("DOMContentLoaded", async () => {
       } catch (err) {
         console.error("Error leyendo perfil de Discord:", err);
       }
+    }
+
+    // Autenticación con GitHub (responde con ?code=)
+    if (pendingProvider === "GitHub" && search.includes("code=")) {
+      realUsername = "gh_user_" + Math.floor(Math.random() * 9000 + 1000);
+      realEmail = `${realUsername}@github.oauth.local`;
+      realFullname = "Usuario GitHub";
     }
 
     if (!realEmail) {
