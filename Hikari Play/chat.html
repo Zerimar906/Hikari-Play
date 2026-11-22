@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta charset='UTF-8' />
+<meta content='width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='IE=edge' http-equiv='X-UA-Compatible' />
+<meta content='max-image-preview:large' name='robots' />
+<meta name="google" content="notranslate">
+<title>Chat - Hikari Play</title>
+
+<!-- Enlace al CSS local -->
+<link href="css/style.css" rel="stylesheet">
+<!-- Enlace al CSS base original de la plantilla -->
+<link href="https://dl.dropbox.com/s/83ley00l5ongj2v/style.css" rel="stylesheet">
+
+<script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+<link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/Logo.png">
+<meta name="theme-color" content="#0f0f0f">
+
+<style>
+  html, body {
+    overflow: hidden !important;
+    height: 100%;
+    background: #15171e !important;
+    color: #f5f5f5 !important;
+  }
+
+  /* Mantener header y menú lateral fijos en oscuro por encima del chat */
+  #header {
+    position: relative;
+    z-index: 500;
+  }
+
+  #header .headCn {
+    background: #15171e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eef1f7 !important;
+  }
+
+  #header .tIc {
+    color: #eef1f7 !important;
+  }
+
+  .blogMn {
+    z-index: 990;
+  }
+
+  .blogMn .fCls {
+    z-index: 995 !important;
+  }
+
+  .blogMn .mnBr,
+  .blogMn .mnBrs {
+    z-index: 1000 !important;
+    background-color: #15171e !important;
+    background: #15171e !important;
+    color: #eef1f7 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mnH,
+  .mnH .c,
+  .mnMob,
+  .mnMen,
+  .mMenu li,
+  .mMenu li a {
+    background-color: transparent !important;
+    color: #cbd5e1 !important;
+  }
+
+  .mnMn li.br {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .mnMn li.br a.a {
+    background-color: transparent !important;
+    color: #dbe2f1 !important;
+  }
+
+  .mnMn li.br a.a:hover {
+    background: rgba(64, 121, 255, 0.16) !important;
+    color: #79a8ff !important;
+  }
+
+  /* Sección fija debajo del header sin scroll de página */
+  .chat-container {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100% - 56px);
+    height: calc(100dvh - 56px);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+
+  .chat-box-card {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background: #15171e;
+    border-radius: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .chat-room-bar {
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .chat-room-title {
+    font-size: 0.98rem;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .switch-room-btn {
+    background: rgba(64, 121, 255, 0.16);
+    border: 1px solid rgba(64, 121, 255, 0.4);
+    color: #8ab2ff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.74rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Cinta sencilla desplazándose suavemente */
+  .chat-rules-ribbon {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 6px 0;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .chat-rules-track {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    font-size: 0.74rem;
+    color: #9aa2b5;
+    will-change: transform;
+    animation: cintaSimpleMove 16s linear infinite;
+  }
+
+  .chat-rules-ribbon:hover .chat-rules-track,
+  .chat-rules-ribbon:active .chat-rules-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes cintaSimpleMove {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-rules-track {
+      animation: none !important;
+      padding-left: 12px;
+      white-space: normal;
+    }
+  }
+
+  /* Barra superior de amigos */
+  .friends-bar {
+    background: #12141b;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .friends-bar::-webkit-scrollbar { display: none; }
+
+  .friend-chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 3px 9px 3px 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #e4e7ef;
+    font-size: 0.76rem;
+    font-weight: bold;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .friend-chip img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .friend-chip.active-dm {
+    background: rgba(64, 121, 255, 0.24);
+    border-color: #4079ff;
+    color: #fff;
+  }
+
+  .friends-empty-hint {
+    font-size: 0.74rem;
+    color: #7d8597;
+    white-space: nowrap;
+  }
+
+  /* Aviso de advertencia o bloqueo */
+  .mod-alert-banner {
+    display: none;
+    background: rgba(255, 59, 92, 0.16);
+    border-bottom: 1px solid rgba(255, 59, 92, 0.35);
+    color: #ff7b90;
+    font-size: 0.76rem;
+    padding: 7px 12px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .mod-alert-banner.show {
+    display: block;
+  }
+
+  /* Única zona que desliza: los mensajes */
+  .messages-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    max-width: 85%;
+    flex-shrink: 0;
+  }
+
+  .msg-row.own {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .msg-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #4079ff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .msg-bubble {
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 8px 12px;
+    border-radius: 14px 14px 14px 4px;
+    word-break: break-word;
+  }
+
+  .msg-row.own .msg-bubble {
+    background: #4079ff;
+    border-color: #4079ff;
+    border-radius: 14px 14px 4px 14px;
+  }
+
+  .msg-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 2px;
+  }
+
+  .msg-author {
+    font-size: 0.76rem;
+    font-weight: bold;
+    color: #6ea0ff;
+    cursor: pointer;
+  }
+
+  .msg-row.own .msg-author {
+    color: rgba(255,255,255,0.9);
+  }
+
+  .msg-time {
+    font-size: 0.66rem;
+    color: #8a92a6;
+  }
+
+  .msg-row.own .msg-time {
+    color: rgba(255,255,255,0.75);
+  }
+
+  .msg-text {
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: #f5f5f5;
+  }
+
+  .msg-photo {
+    display: block;
+    max-width: 210px;
+    max-height: 210px;
+    border-radius: 10px;
+    margin-top: 4px;
+    object-fit: cover;
+  }
+
+  .msg-sticker {
+    font-size: 2.3rem;
+    line-height: 1.15;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .msg-gif {
+    display: block;
+    max-width: 210px;
+    max-height: 170px;
+    border-radius: 10px;
+    margin-top: 4px;
+    object-fit: cover;
+  }
+
+  /* Panel flotante estilo WhatsApp (Emojis / Stickers / GIFs) */
+  .wa-picker-popover {
+    display: none;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 62px;
+    background: #181b24;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+    z-index: 40;
+    overflow: hidden;
+  }
+  .wa-picker-popover.show {
+    display: block;
+  }
+
+  .wa-picker-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: #12141b;
+  }
+
+  .wa-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #8a92a6;
+    padding: 8px 8px;
+    font-size: 0.76rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-bottom: 2px solid transparent;
+  }
+
+  .wa-tab-btn.active {
+    color: #6ea0ff;
+    border-bottom-color: #4079ff;
+    background: rgba(64,121,255,0.08);
+  }
+
+  .wa-picker-grid {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    max-height: 175px;
+    overflow-y: auto;
+  }
+
+  .wa-picker-grid.gifs-mode {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .wa-item-btn {
+    background: rgba(255,255,255,0.05);
+    border: none;
+    border-radius: 10px;
+    padding: 6px 4px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1.2;
+    transition: background 0.15s ease;
+  }
+  .wa-item-btn:hover {
+    background: rgba(255,255,255,0.12);
+  }
+
+  .wa-sticker-item {
+    font-size: 1.75rem;
+    padding: 8px 4px;
+  }
+
+  .wa-gif-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .wa-gif-btn:hover {
+    border-color: #4079ff;
+  }
+  .wa-gif-btn img {
+    width: 100%;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 7px;
+    display: block;
+  }
+  .wa-gif-btn span {
+    font-size: 0.66rem;
+    color: #c7cddb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .wa-locked-note {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.76rem;
+    color: #9aa2b5;
+    padding: 14px 8px;
+  }
+
+  /* Barra de texto fija abajo */
+  .chat-input-bar {
+    background: #1a1d26;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+  }
+
+  .tool-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #9bb8ff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .tool-icon-btn:hover,
+  .tool-icon-btn.active {
+    background: rgba(64,121,255,0.22);
+    border-color: #4079ff;
+    color: #fff;
+  }
+
+  .photo-btn {
+    display: none;
+  }
+  .photo-btn.show {
+    display: flex;
+  }
+
+  .chat-input-bar input[type="text"] {
+    flex: 1;
+    background: #12141b;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 9px 14px;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+  }
+
+  .chat-input-bar input:disabled,
+  .send-btn:disabled,
+  .tool-icon-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .send-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #4079ff;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* Ventanita Flotante Resumen de Perfil */
+  .mini-profile-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+  }
+  .mini-profile-modal.show { display: flex; }
+
+  .mini-card {
+    width: 100%;
+    max-width: 325px;
+    background: #15171e;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    text-align: center;
+    position: relative;
+    color: #fff;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.65);
+  }
+
+  .mini-banner-wrap {
+    position: relative;
+    height: 92px;
+    width: 100%;
+    overflow: hidden;
+    background: #1d2230;
+  }
+
+  .mini-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(7px) brightness(0.42) saturate(0.75);
+    transform: scale(1.12);
+    display: block;
+  }
+
+  .mini-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(15,17,23,0.25), rgba(21,23,30,0.88));
+  }
+
+  .mini-view-profile-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(21, 23, 30, 0.82);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 0.74rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 3;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .mini-view-profile-btn:hover {
+    background: #4079ff;
+    border-color: #4079ff;
+    color: #fff;
+  }
+
+  .mini-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(21, 23, 30, 0.82);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .mini-content {
+    padding: 0 16px 18px 16px;
+    margin-top: -36px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .mini-avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    border: 3px solid #15171e;
+    object-fit: cover;
+    background: #0c0e13;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+  }
+
+  .mini-name {
+    font-size: 1.08rem;
+    font-weight: bold;
+    margin-top: 6px;
+    color: #fff;
+  }
+
+  .mini-user {
+    font-size: 0.78rem;
+    color: #8a92a6;
+    margin-bottom: 8px;
+  }
+
+  .mini-bio {
+    font-size: 0.82rem;
+    color: #d2d6e0;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  .mini-tags {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .mini-tag {
+    background: rgba(64,121,255,0.18);
+    color: #7ea8ff;
+    border: 1px solid rgba(64,121,255,0.3);
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 0.73rem;
+  }
+
+  .mini-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .mini-action-btn {
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.09);
+    color: #e4e7ef;
+    border-radius: 12px;
+    padding: 8px 6px;
+    font-size: 0.73rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+  }
+
+  .mini-action-btn i {
+    font-size: 0.92rem;
+  }
+
+  .mini-action-btn:hover {
+    border-color: rgba(64,121,255,0.5);
+    background: #262b38;
+  }
+
+  .mini-action-btn.active-like {
+    background: rgba(255, 59, 92, 0.18);
+    border-color: #ff3b5c;
+    color: #ff5c77;
+  }
+
+  .mini-action-btn.active-friend {
+    background: rgba(52, 199, 89, 0.18);
+    border-color: #34c759;
+    color: #4cd970;
+  }
+
+  .mini-action-btn.dm-btn {
+    background: rgba(64, 121, 255, 0.16);
+    border-color: rgba(64, 121, 255, 0.4);
+    color: #8ab2ff;
+  }
+</style>
+</head>
+<body class='oneGrd MN-2 mobS hdMn bD onIndx onHm drK' id='mainCont'>
+<script>/*<![CDATA[*/ localStorage.setItem('mode', 'darkmode'); /*]]>*/</script>
+
+<input class='prfI hidden' id='offPrf' type='checkbox' />
+<input class='navI hidden' id='offNav' type='checkbox' />
+
+<div class='mainWrp'>
+  <div class='no-items section' id='notif-widget'></div>
+  <header class='header' id='header'>
+    <div class='headCn'>
+      <div class='headD headL'>
+        <div class='headIc'>
+          <label class='tNav tIc bIc' for='offNav'>
+            <svg class='line' viewBox='0 0 24 24'><line x1='3' x2='21' y1='12' y2='12'></line><line x1='3' x2='21' y1='5' y2='5'></line><line x1='3' x2='21' y1='19' y2='19'></line></svg>
+          </label>
+        </div>
+        <div class='headN section' id='header-title'>
+          <div class='widget Header' data-version='2' id='Header1'>
+            <div class='headInnr'>
+              <h1 class='headH'><bdi><span style="color:#4079ff;">Hikari Play</span></bdi></h1>
+            </div>
+            <div class='headDsc hidden'>Best Place to get info about Technology, Gadgets, Online Earnings, etc, Also we share useful content related how to?, Banking , Investments, Mutual Funds etc.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class='headD headR'>
+        <div class='headI'>
+          <div class='headS section' id='header-search'>
+            <div class='widget BlogSearch' data-version='2' id='BlogSearch1'></div>
+          </div>
+          <div class='headP section' id='header-icon'>
+            <div class='widget TextList' data-version='2' id='TextList000'>
+              <ul class='headIc'>
+                <li>
+                  <a href="buscador.html">
+                    <span aria-label='Search' class='tSrch tIc bIc'>
+                      <svg class='line' viewBox='0 0 24 24'><g transform='translate(2.000000, 2.000000)'><circle cx='9.76659044' cy='9.76659044' r='8.9885584'></circle><line x1='16.0183067' x2='19.5423342' y1='16.4851259' y2='20.0000001'></line></g></svg>
+                    </span>
+                  </a>
+                </li>
+                <li id="auth-container">
+                  <a href="login.html">
+                    <span aria-label='Iniciar sesión' class='tSrch tIc bIc'>
+                      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5m0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3m9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class='widget Profile' data-version='2' id='Profile1'>
+              <div class='wPrf tm'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class='mainIn'>
+    <div class='blogMn'>
+      <div class='mnBr'>
+        <div class='mnBrs'>
+          <div class='mnH'>
+            <label aria-label='Close' class='c' data-text='Close' for='offNav'></label>
+          </div>
+          <div class='mnMob section' id='nav-widget-1'>
+            <div class='widget PageList' data-version='2' id='PageList002'>
+              <ul class='mMenu'>
+                <li><a>Telegram</a></li>                         
+                <li><a>Zerimar</a></li>
+              </ul>
+            </div>
+            <div class='widget LinkList' data-version='2' id='LinkList002'>
+              <div class='mNav'>
+                <label class='tIc bIc' for='offNav'>
+                  <svg viewBox='0 0 512 512'><path d='M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256 c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32 C448,238.3,434.3,224,417.4,224z'></path></svg>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class='mnMen section' id='nav-widget-2'>
+            <div class='widget HTML' data-version='2' id='HTML000'>
+              <ul class='mnMn' itemscope='itemscope' itemtype='https://schema.org/SiteNavigationElement'>
+                <li class='drp br'></li>
+                <li class='br'>
+                  <a class='a' href='index.html' itemprop='url'>
+                    <span class="iconify" data-icon="entypo:home" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Home</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a href="anime.html" class="a">
+                    <span class="bx-custom" aria-hidden="true">
+                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" fill="#6586c9" aria-hidden="true">
+                    <path d="M31.535,56c0,0,2.326,0,2.465,0c8.175,0,14.927-5.902,15.875-13.535L54.61,41.2l4-1.06v-4v-7.48 c0-13.46-11.35-24.41-25.3-24.41c-0.52,0-4.68,0-4.68,0C15.26,4.25,4.39,15.2,4.39,28.66v11.21l10.777,2.875 C16.259,50.217,23.173,56,31.535,56z M34,52c-6.608,0-11.986-5.062-12-11.289l0.74-8.604l7.662,3.831l0.899-4.096l8.604,8.479 l1.658-8.972l4.43,9.698C45.791,47.119,40.489,52,34,52z M12.05,28.66c0-11.25,9.54-20.41,21.26-20.41 c11.72,0,21.25,9.16,21.25,20.41v8.553l-5.276,1.409l-9.349-20.471L37.344,32.18l-8.396-8.271l-1.351,6.154l-8.338-4.169 l-1.082,12.588L12.05,36.85V28.66z"/>
+                     </svg>
+                    </span>
+                    <span>Anime</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='doramas.html' itemprop='url'>
+                    <span class="iconify" data-icon="mdi:heart-box-outline" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Doramas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='peliculas.html' itemprop='url'>
+                    <span class="iconify" data-icon="bx:bxs-film" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Películas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='series.html' itemprop='url'>
+                    <span class="iconify" data-icon="ic:outline-live-tv" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Series</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='chat.html' itemprop='url'>
+                    <span class="iconify" data-icon="ep:chat-dot-round" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Chat</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='radio.html' itemprop='url'>
+                    <span class="iconify" data-icon="ion:radio-sharp" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Radio</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='http://www.e-droid.net/privacy.php?ida=758610&idl=es' itemprop='url'>
+                    <span class="iconify" data-icon="ic:baseline-privacy-tip" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso de privacidad</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='#' itemprop='url'>
+                    <span class="iconify" data-icon="jam:info-f" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso Legal</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <label class='fCls' for='offNav'></label>
+    </div>
+  </div>
+</div>
+
+<!-- Sección Fija del Chat Global / Privado -->
+<div class="chat-container">
+  <div class="chat-box-card">
+    <div class="chat-room-bar">
+      <div class="chat-room-title">
+        <i id="roomIcon" class="fas fa-comments" style="color:#4079ff;"></i>
+        <span id="roomTitleText">Chat Global</span>
+      </div>
+      <button type="button" id="backToGlobalBtn" class="switch-room-btn" style="display:none;" onclick="openGlobalChat()">
+        <i class="fas fa-globe-americas"></i> Global
+      </button>
+    </div>
+
+    <!-- Cinta sencilla en movimiento debajo de la cabecera del chat -->
+    <div id="chatRulesRibbon" class="chat-rules-ribbon">
+      <span id="chatRulesText" class="chat-rules-track"></span>
+    </div>
+
+    <!-- Barra superior de amigos -->
+    <div id="friendsBar" class="friends-bar"></div>
+
+    <!-- Aviso de advertencia o bloqueo -->
+    <div id="modAlertBanner" class="mod-alert-banner"></div>
+
+    <div id="messagesArea" class="messages-area"></div>
+
+    <!-- Panel flotante estilo WhatsApp con pestañas Emojis, Stickers y GIFs -->
+    <div id="waPickerPopover" class="wa-picker-popover">
+      <div class="wa-picker-tabs">
+        <button type="button" id="tabEmojisBtn" class="wa-tab-btn active" onclick="switchPickerTab('emojis')">
+          <i class="far fa-smile"></i> Emojis
+        </button>
+        <button type="button" id="tabStickersBtn" class="wa-tab-btn" onclick="switchPickerTab('stickers')">
+          <i class="far fa-sticky-note"></i> Stickers
+        </button>
+        <button type="button" id="tabGifsBtn" class="wa-tab-btn" onclick="switchPickerTab('gifs')">
+          <i class="fas fa-film"></i> GIFs
+        </button>
+      </div>
+      <div id="waPickerGrid" class="wa-picker-grid"></div>
+    </div>
+
+    <form class="chat-input-bar" onsubmit="sendMessage(event)">
+      <button type="button" id="waPickerToggleBtn" class="tool-icon-btn" onclick="toggleWaPicker()" title="Emojis, stickers y GIFs">
+        <i class="far fa-smile"></i>
+      </button>
+
+      <input type="file" id="privatePhotoInput" accept="image/*" style="display:none;" onchange="handlePrivatePhoto(event)">
+      <button type="button" id="privatePhotoBtn" class="tool-icon-btn photo-btn" onclick="document.getElementById('privatePhotoInput').click()" title="Enviar foto en privado">
+        <i class="fas fa-image"></i>
+      </button>
+
+      <input type="text" id="chatInput" placeholder="Escribe un mensaje o emoji..." maxlength="200" autocomplete="off" required>
+      <button type="submit" id="sendBtn" class="send-btn" title="Enviar"><i class="fas fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>
+
+<!-- Ventanita Flotante Resumen de Perfil -->
+<div id="miniProfileModal" class="mini-profile-modal" onclick="closeMiniProfile(event)">
+  <div class="mini-card" onclick="event.stopPropagation()">
+    <div class="mini-banner-wrap">
+      <img id="miniBannerImg" class="mini-banner-img" src="img/Logo.png" alt="Fondo de perfil">
+      <div class="mini-banner-overlay"></div>
+      <a id="miniProfileLink" href="perfil.html" class="mini-view-profile-btn">
+        <i class="fas fa-user"></i> Ver perfil
+      </a>
+      <button type="button" class="mini-close" onclick="closeMiniProfile()" title="Cerrar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="mini-content">
+      <img id="miniAvatar" class="mini-avatar" src="img/Logo.png" alt="Avatar">
+      <div id="miniName" class="mini-name">-</div>
+      <div id="miniUser" class="mini-user">@-</div>
+      <div id="miniBio" class="mini-bio">-</div>
+      <div id="miniTags" class="mini-tags"></div>
+
+      <div class="mini-actions">
+        <button type="button" id="btnLikeUser" class="mini-action-btn" onclick="toggleLikeUser()">
+          <i class="fas fa-heart"></i>
+          <span id="labelLikeUser">Me gusta</span>
+        </button>
+        <button type="button" id="btnFriendUser" class="mini-action-btn" onclick="toggleFriendUser()">
+          <i class="fas fa-user-plus"></i>
+          <span id="labelFriendUser">Agregar</span>
+        </button>
+        <button type="button" class="mini-action-btn dm-btn" onclick="startPrivateChat()">
+          <i class="fas fa-paper-plane"></i>
+          <span>Mensaje</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
+<script src='https://dl.dropbox.com/s/x2to4fmvv2ftcqn/xscript.js'></script>
+
+<script>
+  const ONE_HOUR_MS = 60 * 60 * 1000;
+  const QUICK_EMOJIS = ['😀', '😂', '🔥', '❤️', '🍿', '🎬', '😱', '👏', '✨', '😎', '😍', '🙌'];
+  const PRIVATE_STICKERS = ['😘', '😉', '💋', '🙈', '🥰', '😏', '💖', '🔥', '💘', '😻', '🥂', '🌹'];
+
+  const PRIVATE_GIFS = [
+    {
+      id: "wink",
+      label: "Guiño",
+      url: "https://media.giphy.com/media/13CoXDiaCcCoyk/giphy.gif"
+    },
+    {
+      id: "hearts",
+      label: "Corazones",
+      url: "https://media.giphy.com/media/l0amJzVHIAfl7jMDOS/giphy.gif"
+    },
+    {
+      id: "fire",
+      label: "Fuego",
+      url: "https://media.giphy.com/media/3o72FfM5HJydZafgUE/giphy.gif"
+    },
+    {
+      id: "laugh",
+      label: "Risa",
+      url: "https://media.giphy.com/media/10JhviFuU2gWD6/giphy.gif"
+    },
+    {
+      id: "party",
+      label: "Brindis",
+      url: "https://media.giphy.com/media/g9582DNuQppxC/giphy.gif"
+    },
+    {
+      id: "shock",
+      label: "Sorpresa",
+      url: "https://media.giphy.com/media/5VKbvrjxpVJCM/giphy.gif"
+    }
+  ];
+
+  const demoProfiles = {
+    "sakura_chan": {
+      fullname: "Sakura",
+      username: "sakura_chan",
+      avatar: "img/Logo.png",
+      banner: "img/Logo.png",
+      bio: "Recomendando animes y dramas todos los días.",
+      tags: ["Anime", "Música"]
+    },
+    "kenji_kun": {
+      fullname: "Kenji",
+      username: "kenji_kun",
+      avatar: "img/Logo.png",
+      banner: "img/Logo.png",
+      bio: "Buscando qué ver esta noche 🍿",
+      tags: ["Series", "Videojuegos"]
+    }
+  };
+
+  const defaultMessages = [
+    {
+      id: 1,
+      userKey: "sakura_chan",
+      fullname: "Sakura",
+      username: "sakura_chan",
+      avatar: "img/Logo.png",
+      text: "¡Hola a todos! ¿Qué serie están viendo hoy? 🍿✨",
+      time: "19:10",
+      isOwn: false
+    },
+    {
+      id: 2,
+      userKey: "kenji_kun",
+      fullname: "Kenji",
+      username: "kenji_kun",
+      avatar: "img/Logo.png",
+      text: "Yo voy por el capítulo 4 de Estamos muertos 🔥",
+      time: "19:12",
+      isOwn: false
+    }
+  ];
+
+  let activeModalUserKey = null;
+  let activePrivateUserKey = null;
+  let activePickerTab = 'emojis';
+  let isPickerOpen = false;
+  let moderationInterval = null;
+
+  function escapeHTML(str) {
+    return String(str).replace(/[&<>"']/g, tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[tag]));
+  }
+
+  function containsURL(text) {
+    const urlRegex = /(https?:\/\/|www\.|ftp:\/\/|[a-z0-9-]+\.(com|net|org|io|gg|me|ly|to|xyz|info|biz|co|app|dev|tv|site|online|store|link|click|tk|ml|ga|cf|gq)(\/|\s|$|[?#]))/i;
+    return urlRegex.test(text);
+  }
+
+  function getModerationState() {
+    const raw = JSON.parse(localStorage.getItem("hikariGlobalMod") || '{"warnings":0,"mutedUntil":0}');
+    if (raw.mutedUntil && Date.now() >= raw.mutedUntil) {
+      raw.mutedUntil = 0;
+      raw.warnings = 0;
+      localStorage.setItem("hikariGlobalMod", JSON.stringify(raw));
+    }
+    return raw;
+  }
+
+  function saveModerationState(state) {
+    localStorage.setItem("hikariGlobalMod", JSON.stringify(state));
+  }
+
+  function formatRemainingTime(ms) {
+    const totalSec = Math.max(1, Math.ceil(ms / 1000));
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    return `${mins}m ${secs.toString().padStart(2, '0')}s`;
+  }
+
+  function updateModerationUI(customAlertMsg = null) {
+    const banner = document.getElementById("modAlertBanner");
+    const input = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const pickerToggleBtn = document.getElementById("waPickerToggleBtn");
+    const mod = getModerationState();
+    const isGlobalMuted = !activePrivateUserKey && mod.mutedUntil && Date.now() < mod.mutedUntil;
+
+    if (isGlobalMuted) {
+      const rem = formatRemainingTime(mod.mutedUntil - Date.now());
+      banner.textContent = `Estás silenciado en el Chat Global por enviar enlaces 2 veces. Tiempo restante: ${rem}.`;
+      banner.classList.add("show");
+      input.disabled = true;
+      sendBtn.disabled = true;
+      pickerToggleBtn.disabled = true;
+      closeWaPicker();
+    } else {
+      input.disabled = false;
+      sendBtn.disabled = false;
+      pickerToggleBtn.disabled = false;
+
+      if (customAlertMsg) {
+        banner.textContent = customAlertMsg;
+        banner.classList.add("show");
+      } else {
+        banner.textContent = "";
+        banner.classList.remove("show");
+      }
+    }
+  }
+
+  function registerUrlViolation() {
+    if (activePrivateUserKey) {
+      updateModerationUI("No está permitido enviar enlaces (URLs) en ningún chat.");
+      return;
+    }
+
+    const mod = getModerationState();
+    mod.warnings = (mod.warnings || 0) + 1;
+
+    if (mod.warnings >= 2) {
+      mod.mutedUntil = Date.now() + ONE_HOUR_MS;
+      mod.warnings = 0;
+      saveModerationState(mod);
+      updateModerationUI();
+    } else {
+      saveModerationState(mod);
+      updateModerationUI("No se permiten URLs en ningún chat. Advertencia 1/2: a la 2.ª vez serás silenciado 1 hora en el Chat Global.");
+    }
+  }
+
+  function renderWaPickerContent() {
+    const grid = document.getElementById("waPickerGrid");
+    const tabEmojis = document.getElementById("tabEmojisBtn");
+    const tabStickers = document.getElementById("tabStickersBtn");
+    const tabGifs = document.getElementById("tabGifsBtn");
+
+    tabEmojis.classList.toggle("active", activePickerTab === "emojis");
+    tabStickers.classList.toggle("active", activePickerTab === "stickers");
+    tabGifs.classList.toggle("active", activePickerTab === "gifs");
+    grid.classList.toggle("gifs-mode", activePickerTab === "gifs" && Boolean(activePrivateUserKey));
+
+    if (activePickerTab === "stickers") {
+      if (!activePrivateUserKey) {
+        grid.innerHTML = `<div class="wa-locked-note">Los stickers solo están disponibles en chats privados.</div>`;
+        return;
+      }
+      grid.innerHTML = PRIVATE_STICKERS.map(st => `
+        <button type="button" class="wa-item-btn wa-sticker-item" onclick="sendPrivateSticker('${st}')">${st}</button>
+      `).join('');
+      return;
+    }
+
+    if (activePickerTab === "gifs") {
+      if (!activePrivateUserKey) {
+        grid.innerHTML = `<div class="wa-locked-note">Los GIFs solo están disponibles en chats privados.</div>`;
+        return;
+      }
+      grid.innerHTML = PRIVATE_GIFS.map(g => `
+        <button type="button" class="wa-gif-btn" onclick="sendPrivateGif('${g.id}')">
+          <img src="${g.url}" alt="${escapeHTML(g.label)}" loading="lazy">
+          <span>${escapeHTML(g.label)}</span>
+        </button>
+      `).join('');
+      return;
+    }
+
+    grid.innerHTML = QUICK_EMOJIS.map(em => `
+      <button type="button" class="wa-item-btn" onclick="addEmoji('${em}')">${em}</button>
+    `).join('');
+  }
+
+  function toggleWaPicker() {
+    const mod = getModerationState();
+    if (!activePrivateUserKey && mod.mutedUntil && Date.now() < mod.mutedUntil) return;
+
+    isPickerOpen = !isPickerOpen;
+    const popover = document.getElementById("waPickerPopover");
+    const toggleBtn = document.getElementById("waPickerToggleBtn");
+    popover.classList.toggle("show", isPickerOpen);
+    toggleBtn.classList.toggle("active", isPickerOpen);
+    if (isPickerOpen) {
+      renderWaPickerContent();
+    }
+  }
+
+  function closeWaPicker() {
+    isPickerOpen = false;
+    document.getElementById("waPickerPopover").classList.remove("show");
+    document.getElementById("waPickerToggleBtn").classList.remove("active");
+  }
+
+  function switchPickerTab(tabName) {
+    activePickerTab = tabName;
+    renderWaPickerContent();
+  }
+
+  function getCurrentTimeStr() {
+    const now = new Date();
+    return now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+  }
+
+  function getStoredGlobalMessages() {
+    const saved = localStorage.getItem("hikariGlobalChat");
+    return saved ? JSON.parse(saved) : defaultMessages;
+  }
+
+  function getStoredPrivateMessages(userKey) {
+    const allDMs = JSON.parse(localStorage.getItem("hikariPrivateChats") || "{}");
+    return allDMs[userKey] || [];
+  }
+
+  function savePrivateMessage(userKey, msg) {
+    const allDMs = JSON.parse(localStorage.getItem("hikariPrivateChats") || "{}");
+    if (!allDMs[userKey]) allDMs[userKey] = [];
+    allDMs[userKey].push(msg);
+    localStorage.setItem("hikariPrivateChats", JSON.stringify(allDMs));
+  }
+
+  function getUserProfileData(userKey) {
+    if (demoProfiles[userKey]) {
+      return demoProfiles[userKey];
+    }
+    let parsedTags = ["Anime"];
+    try {
+      const rawLikes = JSON.parse(localStorage.getItem("hikariLikes") || '["Anime"]');
+      if (Array.isArray(rawLikes) && rawLikes.length) parsedTags = rawLikes;
+    } catch (_) {}
+
+    return {
+      fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
+      username: localStorage.getItem("hikariUsername") || "usuario",
+      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      banner: localStorage.getItem("hikariBanner") || localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      bio: localStorage.getItem("hikariBio") || "Explorando Hikari Play.",
+      tags: parsedTags
+    };
+  }
+
+  function renderFriendsBar() {
+    const bar = document.getElementById("friendsBar");
+    const friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+
+    if (!friends.length) {
+      bar.innerHTML = `<span class="friends-empty-hint">Agrega amigos desde su perfil para verlos aquí y hablar al privado.</span>`;
+      return;
+    }
+
+    bar.innerHTML = friends.map(userKey => {
+      const u = getUserProfileData(userKey);
+      const isSelected = activePrivateUserKey === userKey;
+      return `
+        <button type="button" class="friend-chip ${isSelected ? 'active-dm' : ''}" onclick="openPrivateChatWith('${userKey}')">
+          <img src="${u.avatar}" alt="${escapeHTML(u.fullname)}">
+          <span>${escapeHTML(u.fullname)}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function updateRoomHeader() {
+    const titleEl = document.getElementById("roomTitleText");
+    const iconEl = document.getElementById("roomIcon");
+    const backBtn = document.getElementById("backToGlobalBtn");
+    const ribbonTextEl = document.getElementById("chatRulesText");
+    const inputEl = document.getElementById("chatInput");
+    const photoBtn = document.getElementById("privatePhotoBtn");
+
+    if (activePrivateUserKey) {
+      const peer = getUserProfileData(activePrivateUserKey);
+      titleEl.textContent = `Privado · ${peer.fullname}`;
+      iconEl.className = "fas fa-paper-plane";
+      backBtn.style.display = "inline-flex";
+      ribbonTextEl.textContent = `Chat privado con ${peer.fullname} (@${peer.username}): fotos, GIFs y stickers permitidos · Prohibido enviar URLs.`;
+      inputEl.placeholder = `Mensaje privado para ${peer.fullname}...`;
+      photoBtn.classList.add("show");
+    } else {
+      titleEl.textContent = "Chat Global";
+      iconEl.className = "fas fa-comments";
+      backBtn.style.display = "none";
+      ribbonTextEl.textContent = "Sala Global de Hikari Play: solo texto y emojis. Prohibido enviar URLs (2 faltas = 1 hora sin hablar).";
+      inputEl.placeholder = "Escribe un mensaje o emoji...";
+      photoBtn.classList.remove("show");
+      if (activePickerTab === "stickers" || activePickerTab === "gifs") {
+        activePickerTab = "emojis";
+      }
+    }
+
+    if (isPickerOpen) {
+      renderWaPickerContent();
+    }
+  }
+
+  function renderMessageContent(m) {
+    if (m.type === "photo" && m.photoData) {
+      return `<img src="${m.photoData}" class="msg-photo" alt="Foto enviada">`;
+    }
+    if (m.type === "sticker" && m.sticker) {
+      return `<span class="msg-sticker">${escapeHTML(m.sticker)}</span>`;
+    }
+    if (m.type === "gif" && m.gifId) {
+      const gifObj = PRIVATE_GIFS.find(item => item.id === m.gifId);
+      if (gifObj) {
+        return `<img src="${gifObj.url}" class="msg-gif" alt="${escapeHTML(gifObj.label)}">`;
+      }
+    }
+    return `<div class="msg-text">${escapeHTML(m.text || "")}</div>`;
+  }
+
+  function renderMessages() {
+    const area = document.getElementById("messagesArea");
+    updateRoomHeader();
+    renderFriendsBar();
+    updateModerationUI();
+
+    if (activePrivateUserKey) {
+      const dmMessages = getStoredPrivateMessages(activePrivateUserKey);
+      const msgsHTML = dmMessages.map(m => `
+        <div class="msg-row ${m.isOwn ? 'own' : ''}">
+          <img src="${m.avatar}" class="msg-avatar" alt="Avatar" onclick="openUserCard('${m.userKey}')">
+          <div class="msg-bubble">
+            <div class="msg-meta">
+              <span class="msg-author" onclick="mentionUser('${escapeHTML(m.username)}')">${escapeHTML(m.fullname)}</span>
+              <span class="msg-time">${m.time}</span>
+            </div>
+            ${renderMessageContent(m)}
+          </div>
+        </div>
+      `).join('');
+
+      area.innerHTML = msgsHTML;
+      area.scrollTop = area.scrollHeight;
+      return;
+    }
+
+    const messages = getStoredGlobalMessages();
+    const msgsHTML = messages.map(m => `
+      <div class="msg-row ${m.isOwn ? 'own' : ''}">
+        <img src="${m.avatar}" class="msg-avatar" alt="Avatar" onclick="openUserCard('${m.userKey}')">
+        <div class="msg-bubble">
+          <div class="msg-meta">
+            <span class="msg-author" onclick="mentionUser('${escapeHTML(m.username)}')">${escapeHTML(m.fullname)}</span>
+            <span class="msg-time">${m.time}</span>
+          </div>
+          ${renderMessageContent(m)}
+        </div>
+      </div>
+    `).join('');
+
+    area.innerHTML = msgsHTML;
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function mentionUser(username) {
+    const input = document.getElementById("chatInput");
+    if (input.disabled) return;
+    const mentionText = `@${username} `;
+    if (!input.value.includes(mentionText)) {
+      input.value = input.value ? `${input.value.trimEnd()} ${mentionText}` : mentionText;
+    }
+    input.focus();
+  }
+
+  function addEmoji(emoji) {
+    const input = document.getElementById("chatInput");
+    if (input.disabled) return;
+    input.value += emoji;
+    input.focus();
+  }
+
+  function buildOwnBaseMsg() {
+    return {
+      id: Date.now(),
+      userKey: "currentUser",
+      fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
+      username: localStorage.getItem("hikariUsername") || "usuario",
+      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      time: getCurrentTimeStr(),
+      isOwn: true
+    };
+  }
+
+  function sendMessage(e) {
+    e.preventDefault();
+    const input = document.getElementById("chatInput");
+    if (input.disabled) return;
+
+    const rawText = input.value.trim();
+    if (!rawText) return;
+
+    if (containsURL(rawText)) {
+      registerUrlViolation();
+      return;
+    }
+
+    const newMsg = {
+      ...buildOwnBaseMsg(),
+      type: "text",
+      text: rawText
+    };
+
+    if (activePrivateUserKey) {
+      savePrivateMessage(activePrivateUserKey, newMsg);
+    } else {
+      const messages = getStoredGlobalMessages();
+      messages.push(newMsg);
+      localStorage.setItem("hikariGlobalChat", JSON.stringify(messages));
+    }
+
+    input.value = "";
+    closeWaPicker();
+    updateModerationUI();
+    renderMessages();
+  }
+
+  function sendPrivateSticker(sticker) {
+    if (!activePrivateUserKey) return;
+    const newMsg = {
+      ...buildOwnBaseMsg(),
+      type: "sticker",
+      sticker
+    };
+    savePrivateMessage(activePrivateUserKey, newMsg);
+    closeWaPicker();
+    renderMessages();
+  }
+
+  function sendPrivateGif(gifId) {
+    if (!activePrivateUserKey) return;
+    const gifObj = PRIVATE_GIFS.find(item => item.id === gifId);
+    if (!gifObj) return;
+
+    const newMsg = {
+      ...buildOwnBaseMsg(),
+      type: "gif",
+      gifId: gifObj.id
+    };
+    savePrivateMessage(activePrivateUserKey, newMsg);
+    closeWaPicker();
+    renderMessages();
+  }
+
+  function handlePrivatePhoto(e) {
+    if (!activePrivateUserKey) return;
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      updateModerationUI("Solo se permiten archivos de imagen en el chat privado.");
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const newMsg = {
+        ...buildOwnBaseMsg(),
+        type: "photo",
+        photoData: ev.target.result
+      };
+      savePrivateMessage(activePrivateUserKey, newMsg);
+      e.target.value = "";
+      closeWaPicker();
+      renderMessages();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function openPrivateChatWith(userKey) {
+    activePrivateUserKey = userKey;
+    renderMessages();
+    if (!document.getElementById("chatInput").disabled) {
+      document.getElementById("chatInput").focus();
+    }
+  }
+
+  function openGlobalChat() {
+    activePrivateUserKey = null;
+    renderMessages();
+  }
+
+  function refreshActionButtonsState(userKey) {
+    const likes = JSON.parse(localStorage.getItem("hikariLikedUsers") || "[]");
+    const friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+
+    const isLiked = likes.includes(userKey);
+    const isFriend = friends.includes(userKey);
+
+    const btnLike = document.getElementById("btnLikeUser");
+    const labelLike = document.getElementById("labelLikeUser");
+    btnLike.classList.toggle("active-like", isLiked);
+    labelLike.textContent = isLiked ? "Te gusta" : "Me gusta";
+
+    const btnFriend = document.getElementById("btnFriendUser");
+    const labelFriend = document.getElementById("labelFriendUser");
+    btnFriend.classList.toggle("active-friend", isFriend);
+    labelFriend.textContent = isFriend ? "Amigo" : "Agregar";
+  }
+
+  function openUserCard(userKey) {
+    activeModalUserKey = userKey;
+    const u = getUserProfileData(userKey);
+
+    document.getElementById("miniName").textContent = u.fullname;
+    document.getElementById("miniUser").textContent = "@" + u.username;
+    document.getElementById("miniAvatar").src = u.avatar;
+    document.getElementById("miniBannerImg").src = u.banner || u.avatar;
+    document.getElementById("miniBio").textContent = u.bio;
+    document.getElementById("miniProfileLink").href =
+      userKey === "currentUser"
+        ? "perfil.html"
+        : `perfil.html?user=${encodeURIComponent(u.username)}`;
+
+    const tagsEl = document.getElementById("miniTags");
+    tagsEl.innerHTML = u.tags.length
+      ? u.tags.map(t => `<span class="mini-tag">${escapeHTML(t)}</span>`).join('')
+      : `<span class="mini-tag">Hikari Play</span>`;
+
+    refreshActionButtonsState(userKey);
+    document.getElementById("miniProfileModal").classList.add("show");
+  }
+
+  function toggleLikeUser() {
+    if (!activeModalUserKey) return;
+    let likes = JSON.parse(localStorage.getItem("hikariLikedUsers") || "[]");
+    if (likes.includes(activeModalUserKey)) {
+      likes = likes.filter(k => k !== activeModalUserKey);
+    } else {
+      likes.push(activeModalUserKey);
+    }
+    localStorage.setItem("hikariLikedUsers", JSON.stringify(likes));
+    refreshActionButtonsState(activeModalUserKey);
+  }
+
+  function toggleFriendUser() {
+    if (!activeModalUserKey) return;
+    let friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+    if (friends.includes(activeModalUserKey)) {
+      friends = friends.filter(k => k !== activeModalUserKey);
+      if (activePrivateUserKey === activeModalUserKey) {
+        activePrivateUserKey = null;
+      }
+    } else {
+      friends.push(activeModalUserKey);
+    }
+    localStorage.setItem("hikariFriendUsers", JSON.stringify(friends));
+    refreshActionButtonsState(activeModalUserKey);
+    renderFriendsBar();
+    if (!activePrivateUserKey) renderMessages();
+  }
+
+  function startPrivateChat() {
+    if (!activeModalUserKey) return;
+    let friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+    if (!friends.includes(activeModalUserKey)) {
+      friends.push(activeModalUserKey);
+      localStorage.setItem("hikariFriendUsers", JSON.stringify(friends));
+    }
+    const targetKey = activeModalUserKey;
+    closeMiniProfile();
+    openPrivateChatWith(targetKey);
+  }
+
+  function closeMiniProfile(e) {
+    if (!e || e.target.id === "miniProfileModal") {
+      document.getElementById("miniProfileModal").classList.remove("show");
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    const popover = document.getElementById("waPickerPopover");
+    const toggleBtn = document.getElementById("waPickerToggleBtn");
+    if (isPickerOpen && !popover.contains(e.target) && !toggleBtn.contains(e.target)) {
+      closeWaPicker();
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMessages();
+    moderationInterval = setInterval(() => {
+      updateModerationUI();
+    }, 1000);
+  });
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>
