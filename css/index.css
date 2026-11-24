@@ -892,3 +892,7 @@ body.search-page li::marker,
   font-weight: 700;
   cursor: pointer;
 }
+/*===Zoom===*/
+html, body {
+  touch-action: manipulation;
+}
