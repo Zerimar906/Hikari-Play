@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta name="google" content="notranslate">
+<meta charset='UTF-8' />
+<meta content='width=device-width, user-scalable=1, initial-scale=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='IE=edge' http-equiv='X-UA-Compatible' />
+<meta content='max-image-preview:large' name='robots' />
+<title>Anime - Hikari Play</title>
+
+<!-- Enlace al CSS local -->
+<link href="css/style.css" rel="stylesheet">
+<!-- Enlace al estilo original de la plantilla para asegurar el diseño base -->
+<link href="https://dl.dropbox.com/s/83ley00l5ongj2v/style.css" rel="stylesheet">
+
+<script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans&display=swap" rel="stylesheet">
+<link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="img/Logo.png">
+
+<style>
+  body#mainCont {
+    background: #0d0f14 !important;
+    color: #f3f5f9 !important;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    padding-bottom: 32px;
+  }
+
+  /* Cabecera y menú lateral alineados en oscuro fijo */
+  #header .headCn {
+    background: rgba(15, 18, 25, 0.94) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eef1f7 !important;
+  }
+
+  #header .tIc {
+    color: #eef1f7 !important;
+  }
+
+  .blogMn .mnBr,
+  .blogMn .mnBrs {
+    background-color: #151922 !important;
+    background: #151922 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eef1f7 !important;
+  }
+
+  .mnH,
+  .mnH .c,
+  .mnMob,
+  .mnMen,
+  .mMenu li,
+  .mMenu li a {
+    background-color: transparent !important;
+    color: #cbd5e1 !important;
+  }
+
+  .mnMn li.br {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .mnMn li.br a.a {
+    background-color: transparent !important;
+    color: #dbe2f1 !important;
+    border-radius: 10px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mnMn li.br a.a:hover {
+    background: rgba(64, 121, 255, 0.16) !important;
+    color: #79a8ff !important;
+  }
+
+  /* Slider principal estilizado */
+  #slider {
+    margin: 12px 14px 6px 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #151922;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+  }
+
+  #slider figure img {
+    object-fit: cover;
+  }
+
+  /* Encabezados de sección */
+  .poster {
+    max-width: 1140px;
+    margin: 18px auto 10px auto;
+    padding: 0 14px;
+  }
+
+  .poster a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 4px 2px;
+  }
+
+  .poster h4.alignleft {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #eef1f7;
+    letter-spacing: 0.2px;
+  }
+
+  .poster h4.alignleft:empty {
+    display: none;
+  }
+
+  .poster h4.alignright {
+    margin: 0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #8ab2ff;
+    background: rgba(64, 121, 255, 0.14);
+    border: 1px solid rgba(64, 121, 255, 0.35);
+    padding: 4px 10px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .poster h4.alignright:empty {
+    display: none;
+  }
+
+  .poster a:hover h4.alignright {
+    background: #4079ff;
+    color: #fff;
+  }
+
+  /* Filas horizontales de tarjetas estilizadas */
+  .scrollmenu {
+    max-width: 1140px;
+    margin: 0 auto 8px auto;
+    padding: 2px 14px 8px 14px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scrollmenu::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .scrollmenu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+  }
+
+  .scrollmenu > a {
+    flex: 0 0 124px;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (min-width: 640px) {
+    .scrollmenu > a {
+      flex: 0 0 146px;
+    }
+  }
+
+  .scrollmenu .xplus {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background: #151922;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .scrollmenu > a:hover .xplus,
+  .scrollmenu > a:active .xplus {
+    transform: translateY(-3px);
+    border-color: rgba(64, 121, 255, 0.55);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  .scrollmenu .xplus img.xaviec {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+
+  .scrollmenu > a:hover .xplus img.xaviec {
+    transform: scale(1.04);
+  }
+</style>
+</head>
+<body class='oneGrd MN-2 mobS hdMn bD onIndx onHm drK' id='mainCont'>
+<script>/*<![CDATA[*/ localStorage.setItem('mode', 'darkmode'); /*]]>*/</script>
+
+<input class='prfI hidden' id='offPrf' type='checkbox' />
+<input class='navI hidden' id='offNav' type='checkbox' />
+
+<div class='mainWrp'>
+  <div class='no-items section' id='notif-widget'></div>
+  <header class='header' id='header'>
+    <div class='headCn'>
+      <div class='headD headL'>
+        <div class='headIc'>
+          <label class='tNav tIc bIc' for='offNav'>
+            <svg class='line' viewBox='0 0 24 24'><line x1='3' x2='21' y1='12' y2='12'></line><line x1='3' x2='21' y1='5' y2='5'></line><line x1='3' x2='21' y1='19' y2='19'></line></svg>
+          </label>
+        </div>
+        <div class='headN section' id='header-title'>
+          <div class='widget Header' data-version='2' id='Header1'>
+            <div class='headInnr'>
+              <h1 class='headH'>
+                <bdi><span style="color:#4079ff;">Hikari Play</span></bdi>
+              </h1>
+            </div>
+            <div class='headDsc hidden'>Best Place to get info about Technology, Gadgets, Online Earnings, etc, Also we share useful content related how to?, Banking , Investments, Mutual Funds etc.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class='headD headR'>
+        <div class='headI'>
+          <div class='headS section' id='header-search'>
+            <div class='widget BlogSearch' data-version='2' id='BlogSearch1'></div>
+          </div>
+          <div class='headP section' id='header-icon'>
+            <div class='widget TextList' data-version='2' id='TextList000'>
+              <ul class='headIc'>
+                <li class='isSrh'>
+                  <a href="buscador.html" aria-label='Search'>
+                    <span class='tSrch tIc bIc'>
+                      <svg class='line' viewBox='0 0 24 24'><g transform='translate(2.000000, 2.000000)'><circle cx='9.76659044' cy='9.76659044' r='8.9885584'></circle><line x1='16.0183067' x2='19.5423342' y1='16.4851259' y2='20.0000001'></line></g></svg>
+                    </span>
+                  </a>
+                </li>
+                <li id="auth-container">
+                  <a href="login.html">
+                    <span aria-label='Iniciar sesión' class='tSrch tIc bIc'>
+                      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5m0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3m9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class='widget Profile' data-version='2' id='Profile1'>
+              <div class='wPrf tm'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class='mainIn'>
+    <div class='blogMn'>
+      <div class='mnBr'>
+        <div class='mnBrs'>
+          <div class='mnH'>
+            <label aria-label='Close' class='c' data-text='Close' for='offNav'></label>
+          </div>
+          <div class='mnMob section' id='nav-widget-1'>
+            <div class='widget PageList' data-version='2' id='PageList002'>
+              <ul class='mMenu'>
+                <li><a>Telegram</a></li>
+                <li><a>Zerimar</a></li>
+              </ul>
+            </div>
+            <div class='widget LinkList' data-version='2' id='LinkList002'>
+              <div class='mNav'>
+                <label class='tIc bIc' for='offNav'>
+                  <svg viewBox='0 0 512 512'><path d='M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256 c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32 C448,238.3,434.3,224,417.4,224z'></path></svg>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class='mnMen section' id='nav-widget-2'>
+            <div class='widget HTML' data-version='2' id='HTML000'>
+              <ul class='mnMn' itemscope='itemscope' itemtype='https://schema.org/SiteNavigationElement'>
+                <li class='drp br'></li>
+                <li class='br'>
+                  <a class='a' href='index.html' itemprop='url'>
+                    <span class="iconify" data-icon="entypo:home" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Home</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a href="anime.html" class="a">
+                    <span class="bx-custom" aria-hidden="true">
+                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" fill="#6586c9" aria-hidden="true">
+                    <path d="M31.535,56c0,0,2.326,0,2.465,0c8.175,0,14.927-5.902,15.875-13.535L54.61,41.2l4-1.06v-4v-7.48 c0-13.46-11.35-24.41-25.3-24.41c-0.52,0-4.68,0-4.68,0C15.26,4.25,4.39,15.2,4.39,28.66v11.21l10.777,2.875 C16.259,50.217,23.173,56,31.535,56z M34,52c-6.608,0-11.986-5.062-12-11.289l0.74-8.604l7.662,3.831l0.899-4.096l8.604,8.479 l1.658-8.972l4.43,9.698C45.791,47.119,40.489,52,34,52z M12.05,28.66c0-11.25,9.54-20.41,21.26-20.41 c11.72,0,21.25,9.16,21.25,20.41v8.553l-5.276,1.409l-9.349-20.471L37.344,32.18l-8.396-8.271l-1.351,6.154l-8.338-4.169 l-1.082,12.588L12.05,36.85V28.66z"/>
+                     </svg>
+                    </span>
+                    <span>Anime</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='doramas.html' itemprop='url'>
+                    <span class="iconify" data-icon="mdi:heart-box-outline" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Doramas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='peliculas.html' itemprop='url'>
+                    <span class="iconify" data-icon="bx:bxs-film" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Películas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='series.html' itemprop='url'>
+                    <span class="iconify" data-icon="ic:outline-live-tv" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Series</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='chat.html' itemprop='url'>
+                    <span class="iconify" data-icon="ep:chat-dot-round" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Chat</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='radio.html' itemprop='url'>
+                    <span class="iconify" data-icon="ion:radio-sharp" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Radio</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='http://www.e-droid.net/privacy.php?ida=758610&idl=es' itemprop='url'>
+                    <span class="iconify" data-icon="ic:baseline-privacy-tip" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso de privacidad</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='#' itemprop='url'>
+                    <span class="iconify" data-icon="jam:info-f" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso Legal</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <label class='fCls' for='offNav'></label>
+    </div>
+
+    <div id="slider">
+      <figure></figure>
+    </div>
+  </div>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Animes</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://imgc.eximg.jp/i=https%253A%252F%252Fs.eximg.jp%252Fexnews%252Ffeed%252FQetic%252FQetic_392768_8550_7.jpg,quality=70,type=jpg" alt="Anime 1"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://es.web.img2.acsta.net/pictures/21/11/24/08/29/4692226.jpg" alt="Anime 2"></div></a>
+  <a href="go:Elfen Lied"><div class="xplus"><img class="xaviec" src="https://dl.uploadgram.me/62884749929cfh?raw" alt="Elfen Lied"></div></a>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Destacados</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Azul.jpg" alt="Poster Azul"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Estrenos</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Azul.jpg" alt="Poster Azul"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Populares</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Azul.jpg" alt="Poster Azul"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Recomendados</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Azul.jpg" alt="Poster Azul"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Clásicos</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Azul.jpg" alt="Poster Azul"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+</div>
+
+<div class="poster">
+  <a href="#"><h4 class="alignleft">Más vistas</h4><h4 class="alignright"></h4></a>
+</div>
+<div class="scrollmenu">
+  <a href="h"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Azul.jpg" alt="Poster Azul"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+  <a href="j"><div class="xplus"><img class="xaviec" src="https://raw.githubusercontent.com/teamxsplus/xstheme/main/Poster-Rojo.jpg" alt="Poster Rojo"></div></a>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
+<script src='https://dl.dropbox.com/s/x2to4fmvv2ftcqn/xscript.js'></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>

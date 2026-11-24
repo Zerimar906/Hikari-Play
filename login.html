@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es' translate='no'>
+<head>
+<meta name="google" content="notranslate">  
+<meta charset='UTF-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>Acceso - Hikari Play</title>
+<link href="css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/Logo.png">
+<meta name="theme-color" content="#0b0c10">
+<style>
+  body {
+    background: #15171e;
+    color: #fff;
+    font-family: 'PT Sans', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #15171e;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    box-sizing: border-box;
+  }
+  .btn-back-absolute {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: #7d8597;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .btn-back-absolute:hover { color: #fff; }
+  .login-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 10px;
+  }
+  .login-title span { color: #4079ff; }
+  .reset-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #9ba3b4;
+    margin-top: -15px;
+    margin-bottom: 20px;
+  }
+  
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.85rem; color: #7d8597; margin-bottom: 6px; font-weight: bold; }
+  .form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    color: #fff;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+  }
+  .form-group input:focus { border-color: #4079ff; outline: none; }
+
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .password-wrapper input {
+    padding-right: 42px;
+  }
+  .btn-toggle-pass {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #7d8597;
+    cursor: pointer;
+    font-size: 0.95rem;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .btn-toggle-pass:hover {
+    color: #fff;
+  }
+  
+  .error-msg { color: #ff453a; font-size: 0.82rem; margin-top: 6px; display: none; font-weight: bold; }
+  .info-msg { color: #30d158; font-size: 0.82rem; margin-top: 8px; display: none; font-weight: bold; }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #4079ff;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: #3060d0; }
+
+  .extra-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    margin-top: 18px;
+  }
+  .extra-links a {
+    color: #6ea0ff;
+    text-decoration: none;
+    max-width: 48%;
+  }
+  .extra-links a:last-child {
+    text-align: right;
+  }
+  .extra-links a:hover { text-decoration: underline; }
+
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    color: #7d8597;
+    font-size: 0.85rem;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 32%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  .oauth-providers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-oauth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+  }
+  .btn-oauth:hover { opacity: 0.85; }
+  .btn-google { background: #db4437; }
+  .btn-discord { background: #5865f2; }
+  .btn-github { background: #24292e; }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <a href="index.html" class="btn-back-absolute" title="Volver"><i class="fas fa-arrow-left"></i></a>
+  
+  <div class="login-title">Hikari<span>Play</span></div>
+
+  <!-- VISTA PRINCIPAL -->
+  <div id="loginSection">
+    <form id="authForm">
+      <div class="form-group" id="usernameGroup" style="display:none;">
+        <label>Nombre de Usuario Único (@user)</label>
+        <input type="text" id="regUsername" placeholder="ej: usuario01">
+        <div id="usernameTakenError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="email" required placeholder="tu@correo.com">
+        <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
+        <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
+        <div id="resetInfoMsg" class="info-msg"></div>
+      </div>
+      
+      <div class="form-group">
+        <label>Contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" required placeholder="••••••••">
+          <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" onclick="togglePasswordVisibility('password', 'passwordEyeIcon')" title="Mostrar u ocultar contraseña">
+            <i class="fas fa-eye" id="passwordEyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-submit">Ingresar</button>
+    </form>
+
+    <div class="extra-links">
+      <a href="#" id="toggleModeBtn" onclick="toggleMode(event)">¿No tienes cuenta? Regístrate</a>
+      <a href="#" id="forgotPassBtn" onclick="handleForgotPassword(event)">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <div class="divider">o conéctate con</div>
+
+    <div class="oauth-providers">
+      <button type="button" onclick="redirectToOfficialOAuth('Google')" class="btn-oauth btn-google">
+        <i class="fab fa-google"></i> Continuar con Google
+      </button>
+      <button type="button" onclick="redirectToOfficialOAuth('Discord')" class="btn-oauth btn-discord">
+        <i class="fab fa-discord"></i> Continuar con Discord
+      </button>
+      <button type="button" onclick="redirectToOfficialOAuth('GitHub')" class="btn-oauth btn-github">
+        <i class="fab fa-github"></i> Continuar con GitHub
+      </button>
+    </div>
+  </div>
+
+  <!-- VISTA DE RESTABLECER CONTRASEÑA (DESDE EL ENLACE DEL CORREO) -->
+  <div id="resetPasswordSection" style="display:none;">
+    <div class="reset-subtitle">Restablecer contraseña</div>
+    <form id="resetPasswordForm">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="resetEmailInput" required placeholder="tu@correo.com">
+        <div id="resetEmailNotFoundError" class="error-msg">Este correo no coincide con el enlace o no está registrado.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Nueva contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="newPasswordInput" required minlength="6" placeholder="Mínimo 6 caracteres">
+          <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('newPasswordInput', 'newPassEyeIcon')" title="Mostrar u ocultar contraseña">
+            <i class="fas fa-eye" id="newPassEyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirmar nueva contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="confirmNewPasswordInput" required minlength="6" placeholder="Repite tu contraseña">
+          <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('confirmNewPasswordInput', 'confirmPassEyeIcon')" title="Mostrar u ocultar contraseña">
+            <i class="fas fa-eye" id="confirmPassEyeIcon"></i>
+          </button>
+        </div>
+        <div id="passwordMismatchError" class="error-msg">Las contraseñas no coinciden.</div>
+      </div>
+
+      <button type="submit" class="btn-submit">Guardar nueva contraseña</button>
+    </form>
+
+    <div class="extra-links" style="justify-content:center;">
+      <a href="#" onclick="exitResetView(event)">Volver a iniciar sesión</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html";
+
+
+const EMAILJS_CONFIG = {
+  publicKey: "FS0bgMDeemgaOliNd",
+  serviceId: "service_qar8cgj",
+  templateId: "template_r7xv0gl"
+};
+
+if (window.emailjs && EMAILJS_CONFIG.publicKey && !EMAILJS_CONFIG.publicKey.startsWith("TU_")) {
+  emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+}
+
+const OAUTH_CONFIG = {
+  Google: {
+    clientId: "423629295215-oa4fno446h78cm90npn4031dnqa3ernc.apps.googleusercontent.com",
+    authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    scope: "email profile",
+    responseType: "token"
+  },
+  Discord: {
+    clientId: "1570716113753608293",
+    authUrl: "https://discord.com/api/oauth2/authorize",
+    scope: "identify email",
+    responseType: "token"
+  },
+  GitHub: {
+    clientId: "Ov23li71mySA9Id9XLPs",
+    authUrl: "https://github.com/login/oauth/authorize",
+    scope: "user:email",
+    responseType: "code"
+  }
+};
+
+let isRegistering = false;
+
+function togglePasswordVisibility(inputId, iconId) {
+  const passInput = document.getElementById(inputId);
+  const eyeIcon = document.getElementById(iconId);
+  const isHidden = passInput.type === "password";
+
+  passInput.type = isHidden ? "text" : "password";
+  eyeIcon.classList.toggle("fa-eye", !isHidden);
+  eyeIcon.classList.toggle("fa-eye-slash", isHidden);
+}
+
+function exitResetView(e) {
+  if (e) e.preventDefault();
+  window.history.replaceState({}, document.title, window.location.pathname);
+  document.getElementById("resetPasswordSection").style.display = "none";
+  document.getElementById("loginSection").style.display = "block";
+  clearErrors();
+}
+
+async function handleForgotPassword(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const emailField = document.getElementById("email");
+  const resetMsg = document.getElementById("resetInfoMsg");
+  const forgotBtn = document.getElementById("forgotPassBtn");
+  const emailInput = emailField.value.trim().toLowerCase();
+
+  if (!emailInput) {
+    emailField.focus();
+    alert("Escribe primero tu correo electrónico en el campo de correo para enviar el enlace.");
+    return;
+  }
+
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+
+  if (!usersDb[emailInput]) {
+    document.getElementById("emailError").style.display = "block";
+    return;
+  }
+
+  if (
+    !window.emailjs ||
+    !EMAILJS_CONFIG.publicKey || EMAILJS_CONFIG.publicKey.startsWith("TU_") ||
+    !EMAILJS_CONFIG.serviceId || EMAILJS_CONFIG.serviceId.startsWith("TU_") ||
+    !EMAILJS_CONFIG.templateId || EMAILJS_CONFIG.templateId.startsWith("TU_")
+  ) {
+    alert("Configura primero tu Public Key, Service ID y Template ID de EmailJS en EMAILJS_CONFIG.");
+    return;
+  }
+
+  const resetToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+  localStorage.setItem("hikariPendingReset_" + emailInput, resetToken);
+
+  const recoveryLink = `${GITHUB_REDIRECT_URI}?reset=1&email=${encodeURIComponent(emailInput)}&token=${encodeURIComponent(resetToken)}`;
+
+  const originalBtnText = forgotBtn.textContent;
+  forgotBtn.textContent = "Enviando enlace...";
+  forgotBtn.style.pointerEvents = "none";
+
+  try {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: emailInput,
+      email: emailInput,
+      username: usersDb[emailInput].username || emailInput,
+      recovery_link: recoveryLink,
+      app_name: "Hikari Play"
+    });
+
+    resetMsg.textContent = "Enlace enviado. Revisa tu bandeja de entrada o spam y abre el enlace.";
+    resetMsg.style.display = "block";
+  } catch (err) {
+    console.error("Error enviando correo con EmailJS:", err);
+    alert("No se pudo enviar el correo con EmailJS. Revisa tu Template ID y las variables de la plantilla.");
+  } finally {
+    forgotBtn.textContent = originalBtnText;
+    forgotBtn.style.pointerEvents = "auto";
+  }
+}
+
+document.getElementById("resetPasswordForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const emailVal = document.getElementById("resetEmailInput").value.trim().toLowerCase();
+  const newPass = document.getElementById("newPasswordInput").value;
+  const confirmPass = document.getElementById("confirmNewPasswordInput").value;
+  const urlParams = new URLSearchParams(window.location.search);
+  const linkEmail = (urlParams.get("email") || "").trim().toLowerCase();
+  const linkToken = urlParams.get("token") || "";
+
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const savedToken = localStorage.getItem("hikariPendingReset_" + emailVal);
+
+  if (!usersDb[emailVal] || (linkEmail && emailVal !== linkEmail) || !savedToken || savedToken !== linkToken) {
+    document.getElementById("resetEmailNotFoundError").style.display = "block";
+    return;
+  }
+
+  if (newPass !== confirmPass) {
+    document.getElementById("passwordMismatchError").style.display = "block";
+    return;
+  }
+
+  usersDb[emailVal].password = newPass;
+  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+  localStorage.removeItem("hikariPendingReset_" + emailVal);
+
+  exitResetView();
+  document.getElementById("email").value = emailVal;
+  const resetMsg = document.getElementById("resetInfoMsg");
+  resetMsg.textContent = "Contraseña actualizada. Ya puedes iniciar sesión.";
+  resetMsg.style.display = "block";
+});
+
+function clearErrors() {
+  document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
+  const resetMsg = document.getElementById("resetInfoMsg");
+  if (resetMsg) resetMsg.style.display = "none";
+}
+
+function toggleMode(e) {
+  e.preventDefault();
+  isRegistering = !isRegistering;
+  clearErrors();
+  
+  const userGroup = document.getElementById("usernameGroup");
+  const submitBtn = document.getElementById("submitBtn");
+  const toggleBtn = document.getElementById("toggleModeBtn");
+
+  if (isRegistering) {
+    userGroup.style.display = "block";
+    document.getElementById("regUsername").setAttribute("required", "true");
+    submitBtn.textContent = "Registrarse";
+    toggleBtn.textContent = "¿Ya tienes cuenta? Inicia sesión";
+  } else {
+    userGroup.style.display = "none";
+    document.getElementById("regUsername").removeAttribute("required");
+    submitBtn.textContent = "Ingresar";
+    toggleBtn.textContent = "¿No tienes cuenta? Regístrate";
+  }
+}
+
+function redirectToOfficialOAuth(provider) {
+  const config = OAUTH_CONFIG[provider];
+  sessionStorage.setItem("pendingOAuthProvider", provider);
+  
+  const encodedRedirect = encodeURIComponent(GITHUB_REDIRECT_URI);
+  const targetUrl = `${config.authUrl}?client_id=${config.clientId}&redirect_uri=${encodedRedirect}&response_type=${config.responseType}&scope=${encodeURIComponent(config.scope)}`;
+  
+  window.location.href = targetUrl;
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const hash = window.location.hash;
+  const search = window.location.search;
+  const urlParams = new URLSearchParams(search);
+
+  if (urlParams.get("reset") === "1") {
+    const emailFromLink = urlParams.get("email") || "";
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("resetPasswordSection").style.display = "block";
+    if (emailFromLink) {
+      document.getElementById("resetEmailInput").value = emailFromLink;
+    }
+    return;
+  }
+
+  const pendingProvider = sessionStorage.getItem("pendingOAuthProvider");
+
+  if (pendingProvider && (hash.includes("access_token=") || search.includes("code="))) {
+    sessionStorage.removeItem("pendingOAuthProvider");
+    
+    let accessToken = "";
+    if (hash.includes("access_token=")) {
+      const params = new URLSearchParams(hash.substring(1));
+      accessToken = params.get("access_token");
+    }
+
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    let realEmail = "";
+    let realUsername = "";
+    let realFullname = "";
+    let realAvatar = "";
+
+    if (pendingProvider === "Google" && accessToken) {
+      try {
+        const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const googleUser = await res.json();
+        
+        if (googleUser && googleUser.email) {
+          realEmail = googleUser.email.toLowerCase();
+          realUsername = googleUser.email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "");
+          realFullname = googleUser.name || "Usuario Google";
+          if (googleUser.picture) {
+            realAvatar = googleUser.picture;
+          }
+        }
+      } catch (err) {
+        console.error("Error leyendo perfil de Google:", err);
+      }
+    }
+
+    if (pendingProvider === "Discord" && accessToken) {
+      try {
+        const res = await fetch("https://discord.com/api/users/@me", {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const discordUser = await res.json();
+        
+        if (discordUser && discordUser.id) {
+          realUsername = discordUser.username.toLowerCase().replace(/[^a-z0-9_]/g, "");
+          realEmail = discordUser.email ? discordUser.email.toLowerCase() : `${realUsername}_discord@oauth.local`;
+          realFullname = discordUser.global_name || discordUser.username;
+          if (discordUser.avatar) {
+            realAvatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
+          }
+        }
+      } catch (err) {
+        console.error("Error leyendo perfil de Discord:", err);
+      }
+    }
+
+    if (pendingProvider === "GitHub" && search.includes("code=")) {
+      realUsername = "gh_user_" + Math.floor(Math.random() * 9000 + 1000);
+      realEmail = `${realUsername}@github.oauth.local`;
+      realFullname = "Usuario GitHub";
+    }
+
+    if (!realEmail) {
+      realUsername = pendingProvider.toLowerCase() + "_" + Math.floor(Math.random() * 9000 + 1000);
+      realEmail = `${realUsername}@${pendingProvider.toLowerCase()}.oauth`;
+      realFullname = "Usuario " + pendingProvider;
+    }
+
+    let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+    let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariAuthProvider", pendingProvider);
+    localStorage.setItem("hikariCurrentEmail", realEmail);
+
+    if (usersDb[realEmail]) {
+      const existing = usersDb[realEmail];
+      localStorage.setItem("hikariUsername", existing.username);
+      localStorage.setItem("hikariFullname", existing.fullname || realFullname);
+      if (existing.avatar) localStorage.setItem("hikariAvatar", existing.avatar);
+      if (existing.banner) localStorage.setItem("hikariBanner", existing.banner);
+      if (existing.bio) localStorage.setItem("hikariBio", existing.bio);
+      if (existing.age) localStorage.setItem("hikariAge", existing.age);
+      if (existing.likes) localStorage.setItem("hikariLikes", JSON.stringify(existing.likes));
+
+      alert(`Bienvenido de nuevo. Sesión iniciada con ${pendingProvider}.`);
+      window.location.href = "perfil.html";
+    } else {
+      if (usernamesList.includes(realUsername)) {
+        realUsername = realUsername + "_" + Math.floor(Math.random() * 999);
+      }
+
+      const joinDate = new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+      usersDb[realEmail] = {
+        email: realEmail,
+        username: realUsername,
+        fullname: realFullname,
+        avatar: realAvatar,
+        provider: pendingProvider,
+        joinDate: joinDate
+      };
+
+      usernamesList.push(realUsername);
+      localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+      localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+      localStorage.setItem("hikariUsername", realUsername);
+      localStorage.setItem("hikariFullname", realFullname);
+      if (realAvatar) localStorage.setItem("hikariAvatar", realAvatar);
+      localStorage.setItem("hikariJoinDate", joinDate);
+
+      alert(`Cuenta vinculada con ${pendingProvider}. Completa tu perfil para terminar.`);
+      window.location.href = "editar-perfil.html";
+    }
+  }
+});
+
+document.getElementById("authForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const emailInput = document.getElementById("email").value.trim().toLowerCase();
+  const passwordInput = document.getElementById("password").value;
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+
+  if (isRegistering) {
+    const usernameInput = document.getElementById("regUsername").value.trim().toLowerCase();
+
+    if (usersDb[emailInput]) {
+      document.getElementById("emailExistsError").style.display = "block";
+      return;
+    }
+
+    if (usernamesList.includes(usernameInput)) {
+      document.getElementById("usernameTakenError").style.display = "block";
+      return;
+    }
+
+    const joinDate = new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    usersDb[emailInput] = {
+      email: emailInput,
+      username: usernameInput,
+      fullname: usernameInput,
+      password: passwordInput,
+      joinDate: joinDate
+    };
+
+    localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+    usernamesList.push(usernameInput);
+    localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariCurrentEmail", emailInput);
+    localStorage.setItem("hikariUsername", usernameInput);
+    localStorage.setItem("hikariFullname", usernameInput);
+    localStorage.setItem("hikariJoinDate", joinDate);
+
+    window.location.href = "editar-perfil.html";
+
+  } else {
+    if (!usersDb[emailInput]) {
+      document.getElementById("emailError").style.display = "block";
+      return;
+    }
+
+    const userData = usersDb[emailInput];
+    if (userData.password && userData.password !== passwordInput) {
+      alert("Contraseña incorrecta. Revisa tus datos o usa '¿Olvidaste tu contraseña?'.");
+      return;
+    }
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariCurrentEmail", emailInput);
+    localStorage.setItem("hikariUsername", userData.username);
+    localStorage.setItem("hikariFullname", userData.fullname || "Usuario");
+    if (userData.avatar) localStorage.setItem("hikariAvatar", userData.avatar);
+    if (userData.banner) localStorage.setItem("hikariBanner", userData.banner);
+    if (userData.bio) localStorage.setItem("hikariBio", userData.bio);
+    if (userData.age) localStorage.setItem("hikariAge", userData.age);
+    if (userData.likes) localStorage.setItem("hikariLikes", JSON.stringify(userData.likes));
+
+    window.location.href = "perfil.html";
+  }
+});
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+</body>
+</html>

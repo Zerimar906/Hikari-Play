@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta name="google" content="notranslate">
+<meta charset='UTF-8' />
+<meta content='width=device-width, user-scalable=1, initial-scale=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='IE=edge' http-equiv='X-UA-Compatible' />
+<meta content='max-image-preview:large' name='robots' />
+<title>Radio - Hikari Play</title>
+
+<!-- Enlace al CSS local -->
+<link href="css/style.css" rel="stylesheet">
+<!-- Enlace al estilo original de la plantilla para asegurar el diseño base -->
+<link href="https://dl.dropbox.com/s/83ley00l5ongj2v/style.css" rel="stylesheet">
+
+<script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans&display=swap" rel="stylesheet">
+<link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="img/Logo.png">
+
+<style>
+  body#mainCont {
+    background: #0d0f14 !important;
+    color: #f3f5f9 !important;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    padding-bottom: 40px;
+  }
+
+  #header .headCn {
+    background: rgba(15, 18, 25, 0.94) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eef1f7 !important;
+  }
+
+  #header .tIc {
+    color: #eef1f7 !important;
+  }
+
+  .blogMn .mnBr,
+  .blogMn .mnBrs {
+    background-color: #151922 !important;
+    background: #151922 !important;
+    color: #eef1f7 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mnH,
+  .mnH .c,
+  .mnMob,
+  .mnMen,
+  .mMenu li,
+  .mMenu li a {
+    background-color: transparent !important;
+    color: #cbd5e1 !important;
+  }
+
+  .mnMn li.br {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .mnMn li.br a.a {
+    background-color: transparent !important;
+    color: #dbe2f1 !important;
+    border-radius: 10px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mnMn li.br a.a:hover {
+    background: rgba(64, 121, 255, 0.16) !important;
+    color: #79a8ff !important;
+  }
+
+  .mnMn li.br.active a.a,
+  .mnMn li.br a.a.active {
+    background: rgba(64, 121, 255, 0.2) !important;
+    color: #93b8ff !important;
+  }
+
+  .radio-wrapper {
+    max-width: 1060px;
+    margin: 18px auto 0 auto;
+    padding: 0 14px;
+  }
+
+  .radio-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .radio-title-group h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #eef1f7;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .radio-title-group p {
+    margin: 4px 0 0 0;
+    font-size: 0.88rem;
+    color: #9ba5bc;
+  }
+
+  .station-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.16);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .player-card {
+    background: #151922;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+    margin-bottom: 22px;
+  }
+
+  .player-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .player-grid {
+      grid-template-columns: 1.25fr 1fr;
+    }
+  }
+
+  .radio-screen-box {
+    position: relative;
+    width: 100%;
+    min-height: 260px;
+    background: radial-gradient(circle at top left, rgba(107, 92, 231, 0.28), rgba(64, 121, 255, 0.12) 45%, #0c0f16 100%);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .audiomack-visible-iframe {
+    width: 100%;
+    height: 260px;
+    border: 0;
+    display: block;
+    background: #0c0f16;
+  }
+
+  .screen-placeholder {
+    width: 100%;
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    text-align: center;
+    color: #9ba5bc;
+    font-size: 0.88rem;
+  }
+
+  .side-panel-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .side-controls-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .status-line {
+    width: 100%;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #8ab2ff;
+    min-height: 18px;
+  }
+
+  .btn-radio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #1d2230;
+    color: #eef1f7;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .btn-radio:hover {
+    background: rgba(64, 121, 255, 0.18);
+    border-color: rgba(64, 121, 255, 0.45);
+    color: #ffffff;
+  }
+
+  .btn-radio.primary {
+    background: linear-gradient(135deg, #4079ff, #6b5ce7);
+    border-color: transparent;
+    color: #fff;
+  }
+
+  .btn-radio.primary:hover {
+    opacity: 0.94;
+    transform: translateY(-1px);
+  }
+
+  .panel-card {
+    background: #151922;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 22px;
+  }
+
+  .panel-card h3 {
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #eef1f7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-card p {
+    margin: 0 0 14px 0;
+    font-size: 0.84rem;
+    color: #9ba5bc;
+  }
+
+  .audiomack-inline-link {
+    color: #fbbf24;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .audiomack-inline-link:hover {
+    color: #fde68a;
+    text-decoration: underline;
+  }
+
+  .am-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  @media (min-width: 760px) {
+    .am-form {
+      grid-template-columns: 1fr 1.6fr auto;
+    }
+  }
+
+  .radio-input {
+    width: 100%;
+    background: #0e1118;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 10px 13px;
+    color: #f3f5f9;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .radio-input:focus {
+    border-color: #4079ff;
+  }
+
+  .form-feedback {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: #8ab2ff;
+    display: none;
+  }
+
+  .section-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0 12px 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .section-bar h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #eef1f7;
+  }
+
+  .stations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .station-card {
+    background: #151922;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .station-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(64, 121, 255, 0.45);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .station-card.is-playing {
+    border-color: #6b5ce7;
+    background: linear-gradient(180deg, rgba(107, 92, 231, 0.14) 0%, #151922 100%);
+  }
+
+  .station-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .station-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245, 158, 11, 0.16);
+    color: #fbbf24;
+    flex-shrink: 0;
+  }
+
+  .station-card.is-playing .station-icon {
+    background: rgba(139, 92, 246, 0.22);
+    color: #a78bfa;
+  }
+
+  .station-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .station-name {
+    margin: 0;
+    font-size: 0.94rem;
+    font-weight: 800;
+    color: #eef1f7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .station-lang {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.14);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .station-lang.preset {
+    color: #8ab2ff;
+    background: rgba(64, 121, 255, 0.14);
+  }
+
+  .station-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #9ba5bc;
+  }
+
+  .delete-btn {
+    background: rgba(239, 68, 68, 0.14);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .delete-btn:hover {
+    background: rgba(239, 68, 68, 0.28);
+    color: #fff;
+  }
+
+  .empty-user-box {
+    background: #151922;
+    border: 1px dashed rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    color: #9ba5bc;
+    font-size: 0.86rem;
+  }
+</style>
+</head>
+<body class='oneGrd MN-2 mobS hdMn bD onIndx onHm drK' id='mainCont'>
+<script>/*<![CDATA[*/ localStorage.setItem('mode', 'darkmode'); /*]]>*/</script>
+
+<input class='prfI hidden' id='offPrf' type='checkbox' />
+<input class='navI hidden' id='offNav' type='checkbox' />
+
+<div class='mainWrp'>
+  <div class='no-items section' id='notif-widget'></div>
+  <header class='header' id='header'>
+    <div class='headCn'>
+      <div class='headD headL'>
+        <div class='headIc'>
+          <label class='tNav tIc bIc' for='offNav'>
+            <svg class='line' viewBox='0 0 24 24'><line x1='3' x2='21' y1='12' y2='12'></line><line x1='3' x2='21' y1='5' y2='5'></line><line x1='3' x2='21' y1='19' y2='19'></line></svg>
+          </label>
+        </div>
+        <div class='headN section' id='header-title'>
+          <div class='widget Header' data-version='2' id='Header1'>
+            <div class='headInnr'>
+              <h1 class='headH'>
+                <bdi><span style="color:#4079ff;">Hikari Play</span></bdi>
+              </h1>
+            </div>
+            <div class='headDsc hidden'>Hikari Play Radio</div>
+          </div>
+        </div>
+      </div>
+
+      <div class='headD headR'>
+        <div class='headI'>
+          <div class='headS section' id='header-search'>
+            <div class='widget BlogSearch' data-version='2' id='BlogSearch1'></div>
+          </div>
+          <div class='headP section' id='header-icon'>
+            <div class='widget TextList' data-version='2' id='TextList000'>
+              <ul class='headIc'>
+                <li class='isSrh'>
+                  <a href="buscador.html" aria-label='Search'>
+                    <span class='tSrch tIc bIc'>
+                      <svg class='line' viewBox='0 0 24 24'><g transform='translate(2.000000, 2.000000)'><circle cx='9.76659044' cy='9.76659044' r='8.9885584'></circle><line x1='16.0183067' x2='19.5423342' y1='16.4851259' y2='20.0000001'></line></g></svg>
+                    </span>
+                  </a>
+                </li>
+                <li id="auth-container">
+                  <a href="login.html">
+                    <span aria-label='Iniciar sesión' class='tSrch tIc bIc'>
+                      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5m0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3m9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class='widget Profile' data-version='2' id='Profile1'>
+              <div class='wPrf tm'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class='mainIn'>
+    <div class='blogMn'>
+      <div class='mnBr'>
+        <div class='mnBrs'>
+          <div class='mnH'>
+            <label aria-label='Close' class='c' data-text='Close' for='offNav'></label>
+          </div>
+          <div class='mnMob section' id='nav-widget-1'>
+            <div class='widget PageList' data-version='2' id='PageList002'>
+              <ul class='mMenu'>
+                <li><a>Telegram</a></li>
+                <li><a>Zerimar</a></li>
+              </ul>
+            </div>
+            <div class='widget LinkList' data-version='2' id='LinkList002'>
+              <div class='mNav'>
+                <label class='tIc bIc' for='offNav'>
+                  <svg viewBox='0 0 512 512'><path d='M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256 c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32 C448,238.3,434.3,224,417.4,224z'></path></svg>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class='mnMen section' id='nav-widget-2'>
+            <div class='widget HTML' data-version='2' id='HTML000'>
+              <ul class='mnMn' itemscope='itemscope' itemtype='https://schema.org/SiteNavigationElement'>
+                <li class='drp br'></li>
+                <li class='br'>
+                  <a class='a' href='index.html' itemprop='url'>
+                    <span class="iconify" data-icon="entypo:home" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Home</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a href="anime.html" class="a">
+                    <span class="bx-custom" aria-hidden="true">
+                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" fill="#6586c9" aria-hidden="true">
+                    <path d="M31.535,56c0,0,2.326,0,2.465,0c8.175,0,14.927-5.902,15.875-13.535L54.61,41.2l4-1.06v-4v-7.48 c0-13.46-11.35-24.41-25.3-24.41c-0.52,0-4.68,0-4.68,0C15.26,4.25,4.39,15.2,4.39,28.66v11.21l10.777,2.875 C16.259,50.217,23.173,56,31.535,56z M34,52c-6.608,0-11.986-5.062-12-11.289l0.74-8.604l7.662,3.831l0.899-4.096l8.604,8.479 l1.658-8.972l4.43,9.698C45.791,47.119,40.489,52,34,52z M12.05,28.66c0-11.25,9.54-20.41,21.26-20.41 c11.72,0,21.25,9.16,21.25,20.41v8.553l-5.276,1.409l-9.349-20.471L37.344,32.18l-8.396-8.271l-1.351,6.154l-8.338-4.169 l-1.082,12.588L12.05,36.85V28.66z"/>
+                     </svg>
+                    </span>
+                    <span>Anime</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='doramas.html' itemprop='url'>
+                    <span class="iconify" data-icon="mdi:heart-box-outline" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Doramas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='peliculas.html' itemprop='url'>
+                    <span class="iconify" data-icon="bx:bxs-film" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Películas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='series.html' itemprop='url'>
+                    <span class="iconify" data-icon="ic:outline-live-tv" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Series</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='chat.html' itemprop='url'>
+                    <span class="iconify" data-icon="ep:chat-dot-round" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Chat</span>
+                  </a>
+                </li>
+                <li class='br active'>
+                  <a class='a active' href='radio.html' aria-current='page' itemprop='url'>
+                    <span class="iconify" data-icon="ion:radio-sharp" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Radio</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='http://www.e-droid.net/privacy.php?ida=758610&idl=es' itemprop='url'>
+                    <span class="iconify" data-icon="ic:baseline-privacy-tip" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso de privacidad</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='#' itemprop='url'>
+                    <span class="iconify" data-icon="jam:info-f" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso Legal</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <label class='fCls' for='offNav'></label>
+    </div>
+
+    <div class="radio-wrapper">
+      <div class="radio-header">
+        <div class="radio-title-group">
+          <h2>
+            <span class="iconify" data-icon="ion:radio-sharp" data-width="26" data-height="26" style="color:#6b5ce7;"></span>
+            Hikari Radio
+            <span class="station-badge-pill">Audiomack Playlists</span>
+          </h2>
+          <p>Reproduce tus playlists y álbumes de Audiomack desde Hikari Play.</p>
+        </div>
+      </div>
+
+      <!-- Pantalla Completa + Controles de Navegación -->
+      <div class="player-card">
+        <div class="player-grid">
+          <div class="radio-screen-box" id="radioScreen">
+            <iframe
+              id="audiomackFrame"
+              class="audiomack-visible-iframe"
+              scrolling="no"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              title="Reproductor Audiomack"
+              style="display:none;">
+            </iframe>
+
+            <div class="screen-placeholder" id="screenPlaceholder">
+              <span class="iconify" data-icon="mdi:music-note" data-width="34" data-height="34" style="color:#8b7cff;"></span>
+              <span id="placeholderText">Selecciona o reproduce una playlist de Audiomack</span>
+            </div>
+          </div>
+
+          <div class="side-panel-box">
+            <div class="side-controls-row">
+              <button class="btn-radio primary" type="button" onclick="playPrevStation()" title="Anterior">
+                <span class="iconify" data-icon="mdi:skip-previous" data-width="19" data-height="19"></span>
+                <span>Atrás</span>
+              </button>
+              <button class="btn-radio primary" type="button" onclick="playNextStation()" title="Siguiente">
+                <span>Siguiente</span>
+                <span class="iconify" data-icon="mdi:skip-next" data-width="19" data-height="19"></span>
+              </button>
+            </div>
+
+            <div class="status-line" id="playerStatus"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agregar URL de Playlist / Álbum / Canción de Audiomack -->
+      <div class="panel-card">
+        <h3>
+          <span class="iconify" data-icon="mdi:playlist-plus" data-width="22" data-height="22" style="color:#fbbf24;"></span>
+          Agregar Playlist o Canción de Audiomack
+        </h3>
+        <p>Pega el enlace de cualquier playlist, álbum o canción de <a class="audiomack-inline-link" href="https://audiomack.com/" target="_blank" rel="noopener noreferrer">Audiomack</a> para reproducirla y guardarla en tu lista.</p>
+        <form class="am-form" id="audiomackForm">
+          <input type="text" id="amTitleInput" class="radio-input" placeholder="Nombre de la playlist (opcional)">
+          <input type="url" id="amUrlInput" class="radio-input" placeholder="https://audiomack.com/usuario/playlist/nombre" required>
+          <button type="submit" class="btn-radio primary">
+            <span class="iconify" data-icon="mdi:play-circle" data-width="19" data-height="19"></span>
+            Reproducir y Guardar
+          </button>
+        </form>
+        <div id="amFeedback" class="form-feedback"></div>
+      </div>
+
+      <!-- Playlists Guardadas por el usuario -->
+      <div class="section-bar">
+        <h3>Mis Playlists Guardadas</h3>
+      </div>
+      <div id="userStationsContainer"></div>
+
+      <!-- Playlists Fijas configuradas en el código -->
+      <div class="section-bar">
+        <h3>Playlists de Audiomack</h3>
+      </div>
+      <div id="presetPlaylistsContainer"></div>
+    </div>
+  </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
+<script src='https://dl.dropbox.com/s/x2to4fmvv2ftcqn/xscript.js'></script>
+
+<script>
+  // =========================================================================
+  // PEGA AQUÍ TUS URLS DE PLAYLISTS DE AUDIOMACK
+  // Formato: { name: 'Nombre visible', url: 'https://audiomack.com/usuario/playlist/slug' }
+  // =========================================================================
+  const presetPlaylists = [
+    { name: 'La Bachata Volvio', url: 'https://audiomack.com/dalvin-la-melodia/album/la-bachata-volvio' },
+    { name: 'Aqui Se Expresa Lo Que Se Vive', url: 'https://audiomack.com/kiry-curu/album/aqui-se-expresa-lo-que-se-vive' },
+    { name: 'LO BANDIDO EN LA LLEKA', url: 'https://audiomack.com/lilnaay/album/lo-bandido-en-la-lleka' },
+    { name: 'Grupo Frontera', url: 'https://audiomack.com/grupo-frontera/playlist/grupo-frontera-essentials' },
+    { name: 'Bruno Mars', url: 'https://audiomack.com/brunomars/playlist/bruno-mars-essentials' },
+    { name: 'J-pop j-rock', url: 'https://audiomack.com/goat-guardian-of-the-lake/playlist/j-pop-j-rock' }
+  ];
+
+  const STORAGE_KEY = 'hikari_audiomack_playlists_v2';
+  let userStations = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let currentStation = null;
+  let isPlayingState = false;
+
+  const amFrame = document.getElementById('audiomackFrame');
+  const placeholderEl = document.getElementById('screenPlaceholder');
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function parseAudiomackUrl(rawUrl) {
+    try {
+      const url = new URL(rawUrl.trim());
+      if (!url.hostname.includes('audiomack.com')) return null;
+
+      const parts = url.pathname.split('/').filter(Boolean);
+      if (parts[0] === 'embed' && parts.length >= 4) {
+        const artist = parts[1];
+        const kind = parts[2];
+        const slug = parts[3];
+        return {
+          embedUrl: `https://audiomack.com/embed/${artist}/${kind}/${slug}?background=1`,
+          webUrl: `https://audiomack.com/${artist}/${kind}/${slug}`,
+          autoTitle: decodeURIComponent(slug).replace(/-/g, ' ')
+        };
+      }
+
+      if (parts.length >= 3 && ['song', 'album', 'playlist'].includes(parts[1])) {
+        const artist = parts[0];
+        const kind = parts[1];
+        const slug = parts[2];
+        return {
+          embedUrl: `https://audiomack.com/embed/${artist}/${kind}/${slug}?background=1`,
+          webUrl: `https://audiomack.com/${artist}/${kind}/${slug}`,
+          autoTitle: decodeURIComponent(slug).replace(/-/g, ' ')
+        };
+      }
+
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function getBuiltPresetStations() {
+    return presetPlaylists
+      .map((item, idx) => {
+        const parsed = parseAudiomackUrl(item.url);
+        if (!parsed) return null;
+        return {
+          id: 'preset-' + idx,
+          name: item.name || parsed.autoTitle,
+          badge: 'Playlist Fija',
+          desc: 'Playlist de Audiomack',
+          embedUrl: parsed.embedUrl,
+          webUrl: parsed.webUrl,
+          isPreset: true
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function updatePlayingUI(active) {
+    isPlayingState = active;
+    if (active) {
+      amFrame.style.display = 'block';
+      placeholderEl.style.display = 'none';
+    } else {
+      amFrame.style.display = 'none';
+      placeholderEl.style.display = 'flex';
+    }
+  }
+
+  function selectAndPlayStation(station, autoLoad = true) {
+    if (!station) return;
+    currentStation = station;
+
+    document.getElementById('placeholderText').textContent = station.name;
+    document.getElementById('playerStatus').textContent = autoLoad
+      ? `${station.name} — usa Play dentro del reproductor.`
+      : '';
+
+    if (autoLoad) {
+      amFrame.src = station.embedUrl;
+      updatePlayingUI(true);
+    } else {
+      amFrame.src = 'about:blank';
+      updatePlayingUI(false);
+    }
+
+    renderUserStations();
+    renderPresetStations();
+  }
+
+  function playPrevStation() {
+    const all = [...userStations, ...getBuiltPresetStations()];
+    if (!all.length) return;
+    const idx = currentStation ? all.findIndex(s => s.id === currentStation.id) : 0;
+    const prevIdx = idx > 0 ? idx - 1 : all.length - 1;
+    selectAndPlayStation(all[prevIdx], true);
+  }
+
+  function playNextStation() {
+    const all = [...userStations, ...getBuiltPresetStations()];
+    if (!all.length) return;
+    const idx = currentStation ? all.findIndex(s => s.id === currentStation.id) : -1;
+    const nextIdx = idx >= 0 ? (idx + 1) % all.length : 0;
+    selectAndPlayStation(all[nextIdx], true);
+  }
+
+  function deleteUserStation(event, id) {
+    event.stopPropagation();
+    userStations = userStations.filter(s => s.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userStations));
+    if (currentStation && currentStation.id === id) {
+      amFrame.src = 'about:blank';
+      currentStation = null;
+      updatePlayingUI(false);
+      document.getElementById('placeholderText').textContent = 'Selecciona o reproduce una playlist de Audiomack';
+    }
+    renderUserStations();
+  }
+
+  function renderUserStations() {
+    const container = document.getElementById('userStationsContainer');
+    if (!userStations.length) {
+      container.innerHTML = `<div class="empty-user-box">Aún no has guardado playlists. Pega una URL de Audiomack arriba para agregarla.</div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="stations-grid">` + userStations.map(st => {
+      const active = currentStation && st.id === currentStation.id;
+      return `
+        <div class="station-card ${active ? 'is-playing' : ''}" onclick='selectAndPlayStation(${JSON.stringify(st).replace(/'/g, "&#39;")}, true)'>
+          <div class="station-top">
+            <div class="station-icon">
+              <span class="iconify" data-icon="${active && isPlayingState ? 'mdi:equalizer' : 'mdi:playlist-music'}" data-width="22" data-height="22"></span>
+            </div>
+            <div class="station-meta">
+              <h4 class="station-name">${escapeHtml(st.name)}</h4>
+              <span class="station-lang">Guardada</span>
+            </div>
+          </div>
+          <div class="station-actions">
+            <span>${active && isPlayingState ? 'Cargado' : 'Reproducir'}</span>
+            <button type="button" class="delete-btn" onclick="deleteUserStation(event, '${escapeHtml(st.id)}')">Eliminar</button>
+          </div>
+        </div>
+      `;
+    }).join('') + `</div>`;
+  }
+
+  function renderPresetStations() {
+    const container = document.getElementById('presetPlaylistsContainer');
+    const presets = getBuiltPresetStations();
+
+    if (!presets.length) {
+      container.innerHTML = `<div class="empty-user-box">No hay playlists fijas configuradas en el código aún. Puedes agregarlas en <code>presetPlaylists</code> o usar el formulario de arriba.</div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="stations-grid">` + presets.map(st => {
+      const active = currentStation && st.id === currentStation.id;
+      return `
+        <div class="station-card ${active ? 'is-playing' : ''}" onclick='selectAndPlayStation(${JSON.stringify(st).replace(/'/g, "&#39;")}, true)'>
+          <div class="station-top">
+            <div class="station-icon">
+              <span class="iconify" data-icon="${active && isPlayingState ? 'mdi:equalizer' : 'mdi:playlist-music'}" data-width="22" data-height="22"></span>
+            </div>
+            <div class="station-meta">
+              <h4 class="station-name">${escapeHtml(st.name)}</h4>
+              <span class="station-lang preset">Playlist</span>
+            </div>
+          </div>
+          <div class="station-actions">
+            <span>${active && isPlayingState ? 'Cargado' : 'Reproducir'}</span>
+            <span class="iconify" data-icon="mdi:play-circle" data-width="20" data-height="20" style="color:#6ea0ff;"></span>
+          </div>
+        </div>
+      `;
+    }).join('') + `</div>`;
+  }
+
+  document.getElementById('audiomackForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const titleInput = document.getElementById('amTitleInput');
+    const urlInput = document.getElementById('amUrlInput');
+    const feedback = document.getElementById('amFeedback');
+
+    const parsed = parseAudiomackUrl(urlInput.value);
+    if (!parsed) {
+      feedback.style.display = 'block';
+      feedback.style.color = '#fca5a5';
+      feedback.textContent = 'Enlace inválido. Usa un enlace de playlist, álbum o canción de audiomack.com.';
+      return;
+    }
+
+    const cleanTitle = titleInput.value.trim() || parsed.autoTitle;
+    const newStation = {
+      id: 'am-' + Date.now(),
+      name: cleanTitle,
+      badge: 'Guardada',
+      desc: 'Playlist de Audiomack',
+      embedUrl: parsed.embedUrl,
+      webUrl: parsed.webUrl
+    };
+
+    userStations.unshift(newStation);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userStations));
+
+    titleInput.value = '';
+    urlInput.value = '';
+    feedback.style.display = 'block';
+    feedback.style.color = '#6ee7b7';
+    feedback.textContent = `"${cleanTitle}" agregada y cargada.`;
+
+    selectAndPlayStation(newStation, true);
+  });
+
+  // Inicializar listas
+  renderUserStations();
+  renderPresetStations();
+  const initialList = [...userStations, ...getBuiltPresetStations()];
+  if (initialList.length > 0) {
+    selectAndPlayStation(initialList[0], false);
+  }
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>
