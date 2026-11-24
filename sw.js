@@ -6,6 +6,11 @@ const ASSETS_TO_CACHE = [
   "./perfil.html",
   "./editar-perfil.html",
   "./css/style.css",
+  "./css/anime.css",
+  "./css/accion.css",
+  "./css/buscador.css",
+  "./css/editar-perfil.css",
+  "./js/script.js",
   "./auth.js",
   "./img/Logo.png"
 ];
