@@ -74,7 +74,24 @@ body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
   color: #79a8ff !important;
 }
 
-/* Slider deslizable horizontal con sombreado difuminado */
+.bx-custom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #6586c9;
+}
+
+.bx-custom svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: currentColor;
+}
+
+/* Slider deslizable horizontal sin apilamiento ni hueco negro debajo */
 #slider {
   position: relative;
   max-width: 1140px;
@@ -82,23 +99,26 @@ body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
   margin: 16px auto 14px auto;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: none;
   background: #151922;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.50);
   height: auto !important;
   min-height: 0 !important;
 }
 
-/* Sombreado difuminado suave arriba, abajo y en los bordes */
 #slider::after {
   content: "";
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 64px;
   pointer-events: none;
   z-index: 2;
-  background:
-    linear-gradient(to top, rgba(13, 15, 20, 0.78) 0%, rgba(13, 15, 20, 0.18) 38%, transparent 65%),
-    linear-gradient(to right, rgba(13, 15, 20, 0.35) 0%, transparent 14%, transparent 86%, rgba(13, 15, 20, 0.35) 100%);
+  background: linear-gradient(to top, #0d0f14 0%, rgba(13, 15, 20, 0.55) 55%, transparent 100%);
 }
 
 #slider figure {
@@ -116,8 +136,7 @@ body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
   max-height: none !important;
   margin: 0 !important;
   padding: 0 !important;
-  position: relative !important;
-  z-index: 1;
+  position: static !important;
   transform: none !important;
   scrollbar-width: none;
 }
@@ -252,6 +271,164 @@ body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
 }
 
 /* =========================================================
+   Ficha de anime (Fondo limpio, miniatura, ficha y acordeón)
+   ========================================================= */
+.Wallpaper {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  background-size: cover;
+  background-position: center 22%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.Wallpaper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 15, 20, 0.05) 0%,
+    rgba(13, 15, 20, 0.25) 55%,
+    #0d0f14 100%
+  );
+}
+
+.ConjuntoHeadCont {
+  max-width: 1140px;
+  margin: -48px auto 14px auto;
+  padding: 0 14px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.SingleHead {
+  flex: 0 0 104px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #151922;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75);
+}
+
+.SingleHead img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-section-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #e2e8f0 !important;
+  line-height: 1.2;
+  margin-top: 38px;
+}
+
+.info-details {
+  max-width: 1140px;
+  margin: 0 auto 22px auto;
+  padding: 6px 14px;
+  background: transparent;
+  border: none;
+  line-height: 1.55;
+  font-size: 0.94rem;
+}
+
+/* Acordeón de temporadas y episodios */
+ul.accordion,
+ul.accordion ul.submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.accordion {
+  max-width: 1140px;
+  margin: 0 auto 28px auto;
+  padding: 0 12px;
+}
+
+ul.accordion > li {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+ul.accordion .link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: #004CFF;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+ul.accordion .link i:first-child {
+  margin-right: 10px;
+  color: #ffffff;
+}
+
+ul.accordion .link i.fa-chevron-down {
+  transition: transform 0.2s ease;
+  color: #ffffff;
+}
+
+ul.accordion > li.open .link i.fa-chevron-down {
+  transform: rotate(180deg);
+}
+
+ul.submenu {
+  display: none;
+  padding: 8px 4px 10px 4px;
+}
+
+ul.submenu li {
+  margin-bottom: 6px;
+}
+
+ul.submenu li:last-child {
+  margin-bottom: 0;
+}
+
+ul.submenu li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #151922;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f1f5f9 !important;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+ul.submenu li a::after {
+  content: "▶";
+  font-size: 0.75rem;
+  color: #004CFF;
+}
+
+ul.submenu li a:hover {
+  background: #1e2433;
+  border-color: rgba(0, 76, 255, 0.5);
+}
+
+/* =========================================================
    Adaptación por tamaño de pantalla (iPad / Tablet / PC)
    ========================================================= */
 @media (min-width: 640px) {
@@ -279,6 +456,18 @@ body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
   .scrollmenu > a {
     flex: 0 0 156px;
   }
+
+  .Wallpaper {
+    height: 360px;
+  }
+
+  .SingleHead {
+    flex: 0 0 124px;
+  }
+
+  .movie-section-title {
+    font-size: 1.8rem;
+  }
 }
 
 /* =========================================================
@@ -294,6 +483,10 @@ body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
     margin-bottom: 8px;
   }
 }
+
+/* =========================================================
+   Estilos para la página de búsqueda (buscador.html)
+   ========================================================= */
 
 *, *::before, *::after {
   margin: 0;
