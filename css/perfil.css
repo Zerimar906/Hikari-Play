@@ -53,6 +53,27 @@ body {
   background: #4079ff;
 }
 
+.btn-top-settings {
+  position: absolute;
+  top: 15px;
+  right: 96px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: rgba(11, 12, 16, 0.7);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.btn-top-settings:hover {
+  background: #4079ff;
+}
+
 .btn-top-edit {
   position: absolute;
   top: 15px;

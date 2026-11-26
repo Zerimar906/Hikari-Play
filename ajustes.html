@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuenta y Ajustes - Hikari Play</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/Logo.png">
+<link rel="stylesheet" href="./css/ajustes.css">
+<meta name="theme-color" content="#0b0c10">
+
+</head>
+<body>
+
+<main class="account-wrap">
+  <section class="account-hero">
+    <div class="hero-user">
+      <img id="accAvatar" class="hero-avatar" src="img/Logo.png" alt="Avatar">
+      <div class="hero-meta">
+        <h1 id="accTitle" class="hero-name">Invitado Hikari</h1>
+        <div id="accId" class="hero-id">ID: 00000000</div>
+      </div>
+    </div>
+    <button type="button" class="hero-bell" title="Notificaciones" onclick="alert('No tienes notificaciones nuevas.')">
+      <i class="far fa-bell"></i>
+    </button>
+  </section>
+
+  <section class="quick-grid">
+    <a href="perfil.html" class="quick-card fav">
+      <i class="fas fa-heart"></i>
+      <span>Favoritos</span>
+    </a>
+    <button type="button" class="quick-card hist" onclick="document.getElementById('historialSec').scrollIntoView({behavior:'smooth'})">
+      <i class="far fa-clock"></i>
+      <span>Historial</span>
+    </button>
+    <button type="button" class="quick-card share" onclick="shareApp()">
+      <i class="fas fa-share-alt"></i>
+      <span>Compartir</span>
+    </button>
+  </section>
+
+  <section id="historialSec">
+    <div class="section-head">
+      <h2 class="section-title">Historial reciente</h2>
+      <a href="anime.html" class="section-link">Explorar &gt;</a>
+    </div>
+    <div id="historyList" class="history-row">
+      <div class="history-item">
+        <div class="history-poster">Sin historial reciente</div>
+        <div class="history-name">Empieza a ver algo</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <h2 class="section-title">Ajustes y funciones</h2>
+  </div>
+
+  <section class="settings-group">
+    <button type="button" class="setting-row" onclick="window.location.href='editar-perfil.html'">
+      <span class="setting-left">
+        <i class="fas fa-user-cog"></i>
+        <span>
+          Gestión de cuenta
+          <span class="setting-sub">Editar perfil, avatar o gustos</span>
+        </span>
+      </span>
+      <i class="fas fa-chevron-right setting-chevron"></i>
+    </button>
+
+    <div class="setting-row">
+      <span class="setting-left">
+        <i class="fas fa-shield-alt"></i>
+        <span>
+          Filtro +18
+          <span class="setting-sub">Mostrar contenido restringido</span>
+        </span>
+      </span>
+      <label class="switch">
+        <input type="checkbox" id="toggleAdult" onchange="saveSetting('hikariAdultFilter', this.checked)">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-left">
+        <i class="fas fa-play-circle"></i>
+        <span>
+          Siguiente episodio automático
+          <span class="setting-sub">Continuar reproducción sin pausas</span>
+        </span>
+      </span>
+      <label class="switch">
+        <input type="checkbox" id="toggleAutoplay" onchange="saveSetting('hikariAutoplay', this.checked)">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button type="button" class="setting-row" onclick="cycleAudioPref()">
+      <span class="setting-left">
+        <i class="fas fa-closed-captioning"></i>
+        <span>
+          Audio y subtítulos
+          <span id="audioSubLabel" class="setting-sub">Audio: Japonés · Subtítulos: Español</span>
+        </span>
+      </span>
+      <i class="fas fa-chevron-right setting-chevron"></i>
+    </button>
+
+    <button type="button" class="setting-row" onclick="cycleQualityPref()">
+      <span class="setting-left">
+        <i class="fas fa-sliders-h"></i>
+        <span>
+          Calidad y datos
+          <span id="qualityLabel" class="setting-sub">Calidad: Automática</span>
+        </span>
+      </span>
+      <i class="fas fa-chevron-right setting-chevron"></i>
+    </button>
+
+    <button type="button" class="setting-row" onclick="alert('Centro de ayuda y privacidad de Hikari Play.')">
+      <span class="setting-left">
+        <i class="far fa-question-circle"></i>
+        <span>
+          Ayuda, privacidad y aviso legal
+          <span class="setting-sub">Soporte y condiciones de uso</span>
+        </span>
+      </span>
+      <i class="fas fa-chevron-right setting-chevron"></i>
+    </button>
+  </section>
+</main>
+
+<script>
+  const AUDIO_MODES = [
+    "Audio: Japonés · Subtítulos: Español",
+    "Audio: Español · Subtítulos: Desactivados",
+    "Audio: Original · Subtítulos: Español"
+  ];
+  const QUALITY_MODES = [
+    "Calidad: Automática",
+    "Calidad: Alta (1080p)",
+    "Calidad: Ahorro de datos (480p)"
+  ];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const loggedIn = localStorage.getItem("hikariUserLoggedIn") === "true";
+    const name = localStorage.getItem("hikariFullname") || localStorage.getItem("hikariUsername");
+    const avatar = localStorage.getItem("hikariAvatar");
+
+    if (loggedIn && name) {
+      document.getElementById("accTitle").textContent = name;
+    }
+    if (avatar) {
+      document.getElementById("accAvatar").src = avatar;
+    }
+
+    let userId = localStorage.getItem("hikariUserId");
+    if (!userId) {
+      userId = String(Math.floor(10000000 + Math.random() * 90000000));
+      localStorage.setItem("hikariUserId", userId);
+    }
+    document.getElementById("accId").textContent = "ID: " + userId;
+
+    document.getElementById("toggleAdult").checked = localStorage.getItem("hikariAdultFilter") === "true";
+    document.getElementById("toggleAutoplay").checked = localStorage.getItem("hikariAutoplay") !== "false";
+
+    const audioIdx = parseInt(localStorage.getItem("hikariAudioIdx") || "0", 10);
+    document.getElementById("audioSubLabel").textContent = AUDIO_MODES[audioIdx % AUDIO_MODES.length];
+
+    const qualIdx = parseInt(localStorage.getItem("hikariQualityIdx") || "0", 10);
+    document.getElementById("qualityLabel").textContent = QUALITY_MODES[qualIdx % QUALITY_MODES.length];
+  });
+
+  function saveSetting(key, val) {
+    localStorage.setItem(key, String(val));
+  }
+
+  function cycleAudioPref() {
+    const next = (parseInt(localStorage.getItem("hikariAudioIdx") || "0", 10) + 1) % AUDIO_MODES.length;
+    localStorage.setItem("hikariAudioIdx", String(next));
+    document.getElementById("audioSubLabel").textContent = AUDIO_MODES[next];
+  }
+
+  function cycleQualityPref() {
+    const next = (parseInt(localStorage.getItem("hikariQualityIdx") || "0", 10) + 1) % QUALITY_MODES.length;
+    localStorage.setItem("hikariQualityIdx", String(next));
+    document.getElementById("qualityLabel").textContent = QUALITY_MODES[next];
+  }
+
+  function shareApp() {
+    if (navigator.share) {
+      navigator.share({ title: "Hikari Play", url: window.location.origin }).catch(() => {});
+    } else {
+      alert("Enlace de Hikari Play listo para compartir.");
+    }
+  }
+</script>
+</body>
+</html>
