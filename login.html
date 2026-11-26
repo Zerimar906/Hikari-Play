@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html dir='ltr' lang='es' translate='no'>
 <head>
-<meta name="google" content="notranslate">  
+<meta name="google" content="notranslate">
 <meta charset='UTF-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 <title>Acceso - Hikari Play</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="img/Logo.png">
@@ -16,29 +17,31 @@
 <body>
 
 <div class="login-card">
-  <a href="index.html" class="btn-back-absolute" title="Volver"><i class="fas fa-arrow-left"></i></a>
-  
+  <a href="index.html" class="btn-back-absolute" title="Volver" aria-label="Volver al inicio">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+
   <div class="login-title">Hikari<span>Play</span></div>
 
   <!-- VISTA PRINCIPAL -->
   <div id="loginSection">
     <form id="authForm">
       <div class="form-group" id="usernameGroup" style="display:none;">
-        <label>Nombre de Usuario Único (@user)</label>
+        <label for="regUsername">Nombre de Usuario Único (@user)</label>
         <input type="text" id="regUsername" placeholder="ej: usuario01">
         <div id="usernameTakenError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
       </div>
 
       <div class="form-group">
-        <label>Correo electrónico</label>
+        <label for="email">Correo electrónico</label>
         <input type="email" id="email" required placeholder="tu@correo.com">
         <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
         <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
         <div id="resetInfoMsg" class="info-msg"></div>
       </div>
-      
+
       <div class="form-group">
-        <label>Contraseña</label>
+        <label for="password">Contraseña</label>
         <div class="password-wrapper">
           <input type="password" id="password" required placeholder="••••••••">
           <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" onclick="togglePasswordVisibility('password', 'passwordEyeIcon')" title="Mostrar u ocultar contraseña">
@@ -75,13 +78,13 @@
     <div class="reset-subtitle">Restablecer contraseña</div>
     <form id="resetPasswordForm">
       <div class="form-group">
-        <label>Correo electrónico</label>
+        <label for="resetEmailInput">Correo electrónico</label>
         <input type="email" id="resetEmailInput" required placeholder="tu@correo.com">
         <div id="resetEmailNotFoundError" class="error-msg">Este correo no coincide con el enlace o no está registrado.</div>
       </div>
 
       <div class="form-group">
-        <label>Nueva contraseña</label>
+        <label for="newPasswordInput">Nueva contraseña</label>
         <div class="password-wrapper">
           <input type="password" id="newPasswordInput" required minlength="6" placeholder="Mínimo 6 caracteres">
           <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('newPasswordInput', 'newPassEyeIcon')" title="Mostrar u ocultar contraseña">
@@ -91,7 +94,7 @@
       </div>
 
       <div class="form-group">
-        <label>Confirmar nueva contraseña</label>
+        <label for="confirmNewPasswordInput">Confirmar nueva contraseña</label>
         <div class="password-wrapper">
           <input type="password" id="confirmNewPasswordInput" required minlength="6" placeholder="Repite tu contraseña">
           <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('confirmNewPasswordInput', 'confirmPassEyeIcon')" title="Mostrar u ocultar contraseña">
@@ -112,7 +115,6 @@
 
 <script>
 const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html";
-
 
 const EMAILJS_CONFIG = {
   publicKey: "FS0bgMDeemgaOliNd",
@@ -180,7 +182,7 @@ async function handleForgotPassword(e) {
     return;
   }
 
-  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
 
   if (!usersDb[emailInput]) {
     document.getElementById("emailError").style.display = "block";
@@ -237,7 +239,7 @@ document.getElementById("resetPasswordForm").addEventListener("submit", function
   const linkEmail = (urlParams.get("email") || "").trim().toLowerCase();
   const linkToken = urlParams.get("token") || "";
 
-  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
   const savedToken = localStorage.getItem("hikariPendingReset_" + emailVal);
 
   if (!usersDb[emailVal] || (linkEmail && emailVal !== linkEmail) || !savedToken || savedToken !== linkToken) {
@@ -271,19 +273,21 @@ function toggleMode(e) {
   e.preventDefault();
   isRegistering = !isRegistering;
   clearErrors();
-  
+
   const userGroup = document.getElementById("usernameGroup");
+  const regUsernameInput = document.getElementById("regUsername");
   const submitBtn = document.getElementById("submitBtn");
   const toggleBtn = document.getElementById("toggleModeBtn");
 
   if (isRegistering) {
     userGroup.style.display = "block";
-    document.getElementById("regUsername").setAttribute("required", "true");
+    regUsernameInput.setAttribute("required", "true");
     submitBtn.textContent = "Registrarse";
     toggleBtn.textContent = "¿Ya tienes cuenta? Inicia sesión";
   } else {
     userGroup.style.display = "none";
-    document.getElementById("regUsername").removeAttribute("required");
+    regUsernameInput.removeAttribute("required");
+    regUsernameInput.value = "";
     submitBtn.textContent = "Ingresar";
     toggleBtn.textContent = "¿No tienes cuenta? Regístrate";
   }
@@ -292,10 +296,10 @@ function toggleMode(e) {
 function redirectToOfficialOAuth(provider) {
   const config = OAUTH_CONFIG[provider];
   sessionStorage.setItem("pendingOAuthProvider", provider);
-  
+
   const encodedRedirect = encodeURIComponent(GITHUB_REDIRECT_URI);
   const targetUrl = `${config.authUrl}?client_id=${config.clientId}&redirect_uri=${encodedRedirect}&response_type=${config.responseType}&scope=${encodeURIComponent(config.scope)}`;
-  
+
   window.location.href = targetUrl;
 }
 
@@ -318,7 +322,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   if (pendingProvider && (hash.includes("access_token=") || search.includes("code="))) {
     sessionStorage.removeItem("pendingOAuthProvider");
-    
+
     let accessToken = "";
     if (hash.includes("access_token=")) {
       const params = new URLSearchParams(hash.substring(1));
@@ -338,7 +342,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
         const googleUser = await res.json();
-        
+
         if (googleUser && googleUser.email) {
           realEmail = googleUser.email.toLowerCase();
           realUsername = googleUser.email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "");
@@ -358,7 +362,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
         const discordUser = await res.json();
-        
+
         if (discordUser && discordUser.id) {
           realUsername = discordUser.username.toLowerCase().replace(/[^a-z0-9_]/g, "");
           realEmail = discordUser.email ? discordUser.email.toLowerCase() : `${realUsername}_discord@oauth.local`;
@@ -384,8 +388,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       realFullname = "Usuario " + pendingProvider;
     }
 
-    let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
-    let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+    const usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+    const usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
 
     localStorage.setItem("hikariUserLoggedIn", "true");
     localStorage.setItem("hikariAuthProvider", pendingProvider);
@@ -439,8 +443,8 @@ document.getElementById("authForm").addEventListener("submit", function(e) {
 
   const emailInput = document.getElementById("email").value.trim().toLowerCase();
   const passwordInput = document.getElementById("password").value;
-  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
-  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+  const usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
 
   if (isRegistering) {
     const usernameInput = document.getElementById("regUsername").value.trim().toLowerCase();
@@ -475,7 +479,6 @@ document.getElementById("authForm").addEventListener("submit", function(e) {
     localStorage.setItem("hikariJoinDate", joinDate);
 
     window.location.href = "editar-perfil.html";
-
   } else {
     if (!usersDb[emailInput]) {
       document.getElementById("emailError").style.display = "block";

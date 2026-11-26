@@ -1,5 +1,5 @@
 /* =========================================================
-   Hikari Play - css/accion.css
+   Hikari Play - css/anime.css
    ========================================================= */
 
 :root {
@@ -345,7 +345,6 @@ body #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  color: #6586c9;
 }
 
 .bx-custom svg {

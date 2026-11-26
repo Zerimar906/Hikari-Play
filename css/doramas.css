@@ -1,29 +1,64 @@
 /* =========================================================
-   Hikari Play - css/doramas.css (Catálogo de Doramas)
+   Hikari Play - css/anime.css
    ========================================================= */
+
+:root {
+  --bg-main: #0d0f14;
+  --bg-surface: #151922;
+  --bg-elevated: #1c2230;
+  --text-main: #f3f5f9;
+  --text-muted: #9aa4b8;
+  --accent: #4079ff;
+  --accent-hover: #2c62e6;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --header-h: 60px;
+  --drawer-w: 260px;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
+html, body {
+  touch-action: pan-x pan-y;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
-body#mainCont {
-  margin: 0;
-  padding: 64px 0 36px 0;
-  background: #0d0f14 !important;
-  color: #f3f5f9 !important;
-  font-family: 'Nunito', 'PT Sans', sans-serif;
+body#mainCont,
+body.drK {
+  background: var(--bg-main) !important;
+  color: var(--text-main) !important;
+  font-family: 'Nunito', 'Noto Sans', 'PT Sans', sans-serif;
+  font-size: 14px;
+  margin: 0 !important;
+  padding-top: var(--header-h) !important;
+  padding-bottom: 36px !important;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 .hidden {
   display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.clear {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  float: none;
+  clear: both;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -31,40 +66,31 @@ a {
   color: inherit;
 }
 
-ul, ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-svg {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Cabecera y menú lateral alineados en oscuro fijo */
-#header {
+/* Cabecera fija */
+header#header.header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
-  z-index: 900;
+  width: 100%;
+  height: var(--header-h);
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(15, 18, 25, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 #header .headCn {
   height: 100%;
   max-width: 1140px;
   margin: 0 auto;
-  padding: 0 12px;
+  padding: 0 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(15, 18, 25, 0.94) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #eef1f7 !important;
+  background: transparent !important;
+  color: var(--text-main) !important;
 }
 
 .headD {
@@ -78,14 +104,39 @@ svg {
   min-width: 0;
 }
 
+.headN {
+  min-width: 0;
+}
+
+.headInnr,
+.headTtl {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .headH {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 800;
   line-height: 1.1;
 }
 
+.headR {
+  flex-shrink: 0;
+}
+
+.headI,
+.headP,
+.bIc {
+  display: flex;
+  align-items: center;
+}
+
 .headIc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -96,7 +147,14 @@ svg {
   align-items: center;
 }
 
+.headIc li a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .tIc {
+  position: relative;
   width: 36px;
   height: 36px;
   border-radius: 10px;
@@ -104,17 +162,18 @@ svg {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #eef1f7 !important;
+  color: var(--text-main) !important;
+  transition: background 0.15s ease;
 }
 
-#header .tIc {
-  color: #eef1f7 !important;
+.tIc:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .tIc svg,
 header svg {
-  width: 21px !important;
-  height: 21px !important;
+  width: 21px;
+  height: 21px;
   display: block;
 }
 
@@ -127,21 +186,41 @@ svg .line {
   stroke-linejoin: round;
 }
 
-/* Menú lateral (drawer) */
+/* Contenedor principal y menú lateral (drawer) */
+.mainWrp,
+.mainIn,
+.pageContent {
+  position: relative;
+  width: 100%;
+}
+
 .blogMn .mnBr {
   position: fixed;
-  top: 56px;
+  top: 0;
   left: 0;
   bottom: 0;
-  width: 260px;
+  width: var(--drawer-w);
   max-width: 82vw;
-  z-index: 1050;
+  z-index: 1200;
+  background: var(--bg-surface) !important;
+  border-right: 1px solid var(--border-subtle);
+  color: var(--text-main) !important;
+  max-height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  transition: transform 0.24s ease, visibility 0.24s ease;
+}
+
+.blogMn .mnBrs {
+  padding: 14px 12px 24px 12px;
+  background: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+}
+
+body #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
   transform: translateX(-100%);
   visibility: hidden;
   pointer-events: none;
-  transition: transform 0.22s ease, visibility 0.22s ease;
 }
 
 #offNav:checked ~ .mainWrp .blogMn .mnBr {
@@ -150,33 +229,21 @@ svg .line {
   pointer-events: auto;
 }
 
-.blogMn .fCls {
+.fCls {
   position: fixed;
-  inset: 56px 0 0 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  z-index: 1000;
+  z-index: 1150;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.22s ease, visibility 0.22s ease;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
 }
 
-#offNav:checked ~ .mainWrp .blogMn .fCls {
+#offNav:checked ~ .mainWrp .fCls {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-}
-
-.blogMn .mnBr,
-.blogMn .mnBrs {
-  background-color: #151922 !important;
-  background: #151922 !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  color: #eef1f7 !important;
-}
-
-.mnBrs {
-  padding: 12px;
 }
 
 .mnH {
@@ -187,10 +254,12 @@ svg .line {
 
 .mnH .c {
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 6px 10px;
   font-size: 0.85rem;
   font-weight: 700;
   border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #cbd5e1 !important;
 }
 
 .mnH .c::before {
@@ -201,12 +270,16 @@ svg .line {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 4px 10px 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 8px;
+  padding: 8px 6px 12px 6px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 10px;
+  background: transparent !important;
 }
 
 .mMenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -215,26 +288,20 @@ svg .line {
 .mMenu a {
   font-size: 0.85rem;
   font-weight: 700;
+  color: #cbd5e1 !important;
 }
 
 .mNav svg {
-  width: 18px !important;
-  height: 18px !important;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
   transform: rotate(45deg);
 }
 
-.mnH,
-.mnH .c,
-.mnMob,
-.mnMen,
-.mMenu li,
-.mMenu li a {
-  background-color: transparent !important;
-  color: #cbd5e1 !important;
-}
-
 .mnMn {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -245,9 +312,7 @@ svg .line {
 }
 
 .mnMn li.br {
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 4px;
 }
 
@@ -259,16 +324,16 @@ svg .line {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 10px;
+  padding: 10px 12px;
   font-size: 0.94rem;
   font-weight: 700;
-  background-color: transparent !important;
+  background: transparent !important;
   color: #dbe2f1 !important;
   border-radius: 10px;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.mnMn li.br a.a:hover {
+.mnMn li.br a.a :hover {
   background: rgba(64, 121, 255, 0.16) !important;
   color: #79a8ff !important;
 }
@@ -280,66 +345,51 @@ svg .line {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  color: #6586c9;
 }
 
 .bx-custom svg {
-  width: 24px !important;
-  height: 24px !important;
+  width: 100%;
+  height: 100%;
   display: block;
   fill: currentColor;
 }
 
-/* Slider principal estilizado */
-#slider {
-  max-width: 1140px;
-  margin: 12px auto 6px auto;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #151922;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
-}
-
-#slider figure {
-  margin: 0;
-}
-
-#slider figure img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
-
-/* Encabezados de sección */
+/* Encabezado de categoría */
 .poster {
   max-width: 1140px;
   margin: 18px auto 10px auto;
   padding: 0 14px;
+  position: relative;
+  overflow: hidden;
 }
 
 .poster a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  text-decoration: none;
   padding: 4px 2px;
 }
 
 .poster h4.alignleft {
+  float: none;
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  color: #eef1f7;
+  color: #eef1f7 !important;
   letter-spacing: 0.2px;
 }
 
+.poster h4.alignleft:empty,
+.poster h4.alignright:empty {
+  display: none;
+}
+
 .poster h4.alignright {
+  float: none;
   margin: 0;
   font-size: 0.76rem;
   font-weight: 700;
-  color: #8ab2ff;
+  color: #8ab2ff !important;
   background: rgba(64, 121, 255, 0.14);
   border: 1px solid rgba(64, 121, 255, 0.35);
   padding: 4px 10px;
@@ -347,16 +397,12 @@ svg .line {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.poster h4.alignright:empty {
-  display: none;
-}
-
 .poster a:hover h4.alignright {
-  background: #4079ff;
-  color: #fff;
+  background: var(--accent);
+  color: #ffffff !important;
 }
 
-/* Filas horizontales de tarjetas estilizadas */
+/* Filas horizontales de tarjetas */
 .scrollmenu {
   max-width: 1140px;
   margin: 0 auto 8px auto;
@@ -364,8 +410,10 @@ svg .line {
   display: flex;
   gap: 12px;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  background: transparent;
 }
 
 .scrollmenu::-webkit-scrollbar {
@@ -379,21 +427,16 @@ svg .line {
 
 .scrollmenu > a {
   flex: 0 0 124px;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-@media (min-width: 640px) {
-  .scrollmenu > a {
-    flex: 0 0 146px;
-  }
+  display: block;
+  padding: 0;
 }
 
 .scrollmenu .xplus {
+  position: relative;
   width: 100%;
   aspect-ratio: 2 / 3;
-  background: #151922;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
@@ -407,13 +450,43 @@ svg .line {
 }
 
 .scrollmenu .xplus img.xaviec {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
+  border-radius: 0;
   display: block;
   transition: transform 0.25s ease;
 }
 
 .scrollmenu > a:hover .xplus img.xaviec {
   transform: scale(1.04);
+}
+
+@media (min-width: 640px) {
+  .scrollmenu > a {
+    flex: 0 0 146px;
+  }
+}
+
+@media (min-width: 768px) {
+  .poster,
+  .scrollmenu {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .scrollmenu {
+    gap: 14px;
+  }
+
+  .scrollmenu > a {
+    flex: 0 0 156px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .poster {
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
 }

@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html dir='ltr' lang='es'>
 <head>
-<meta name="google" content="notranslate">  
+<meta name="google" content="notranslate">
 <meta charset='UTF-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 <title>Perfil - Hikari Play</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="img/Logo.png">
 <link rel="stylesheet" href="./css/perfil.css">
 <meta name="theme-color" content="#0b0c10">
-
 </head>
 <body>
 
 <div class="social-card">
-  <a href="index.html" class="btn-back" title="Volver al inicio"><i class="fas fa-arrow-left"></i></a>
-  <a href="editar-perfil.html" class="btn-top-edit"><i class="fas fa-pen"></i> Editar</a>
+  <a href="index.html" class="btn-back" title="Volver al inicio" aria-label="Volver al inicio">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <a href="editar-perfil.html" class="btn-top-edit">
+    <i class="fas fa-pen"></i> Editar
+  </a>
 
   <div id="viewBanner" class="card-banner"></div>
 
@@ -29,13 +33,13 @@
       </div>
 
       <div class="quick-actions">
-        <button id="btnFriend" class="action-btn" title="Añadir amigo" onclick="toggleFriend()">
+        <button type="button" id="btnFriend" class="action-btn" title="Añadir amigo" onclick="toggleFriend()">
           <i class="fas fa-user-plus"></i>
         </button>
-        <button id="btnLike" class="action-btn" title="Me gusta" onclick="toggleLike()">
+        <button type="button" id="btnLike" class="action-btn" title="Me gusta" onclick="toggleLike()">
           <i class="fas fa-heart"></i>
         </button>
-        <button class="action-btn" title="Mensaje privado" onclick="openPrivateChat()">
+        <button type="button" class="action-btn" title="Mensaje privado" onclick="openPrivateChat()">
           <i class="fas fa-paper-plane"></i>
         </button>
       </div>
@@ -69,7 +73,7 @@
       <span><i class="far fa-calendar-alt"></i> Miembro desde: <strong id="viewJoinDate" style="color:#c5c6c7;">-</strong></span>
     </div>
 
-    <button onclick="logout()" class="btn-logout">Cerrar Sesión</button>
+    <button type="button" onclick="logout()" class="btn-logout">Cerrar Sesión</button>
   </div>
 </div>
 
@@ -104,8 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const likes = JSON.parse(localStorage.getItem("hikariLikes") || "[]");
   const likesContainer = document.getElementById("viewLikes");
-  likesContainer.innerHTML = likes.length 
-    ? likes.map(l => `<span class="tag-pill">${l}</span>`).join('') 
+  likesContainer.innerHTML = likes.length
+    ? likes.map(l => `<span class="tag-pill">${l}</span>`).join('')
     : '<span style="color:#7d8597; font-size:0.85rem;">Sin gustos seleccionados</span>';
 
   updateInteractionUI();

@@ -126,21 +126,24 @@ svg .line {
   stroke-linejoin: round;
 }
 
-/* Menú lateral (drawer) */
-.blogMn .mnBr {
+.mainWrp .blogMn .mnBr {
   position: fixed;
-  top: 56px;
+  top: 0;
   left: 0;
   bottom: 0;
   width: 260px;
   max-width: 82vw;
-  z-index: 1050;
+  z-index: 1200;
+  background: #15171e !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: #eef1f7 !important;
+  max-height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   transform: translateX(-100%);
   visibility: hidden;
   pointer-events: none;
-  transition: transform 0.22s ease, visibility 0.22s ease;
+  transition: transform 0.24s ease, visibility 0.24s ease;
 }
 
 #offNav:checked ~ .mainWrp .blogMn .mnBr {
@@ -149,15 +152,15 @@ svg .line {
   pointer-events: auto;
 }
 
-.blogMn .fCls {
+.mainWrp .blogMn .fCls {
   position: fixed;
-  inset: 56px 0 0 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  z-index: 1000;
+  z-index: 1150;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.22s ease, visibility 0.22s ease;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
 }
 
 #offNav:checked ~ .mainWrp .blogMn .fCls {
@@ -166,16 +169,10 @@ svg .line {
   pointer-events: auto;
 }
 
-.blogMn .mnBr,
-.blogMn .mnBrs {
-  background-color: #151922 !important;
-  background: #151922 !important;
-  color: #eef1f7 !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-}
-
 .mnBrs {
-  padding: 12px;
+  padding: 14px 12px 24px 12px;
+  background: #15171e !important;
+  color: #eef1f7 !important;
 }
 
 .mnH {
@@ -186,10 +183,12 @@ svg .line {
 
 .mnH .c {
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 6px 10px;
   font-size: 0.85rem;
   font-weight: 700;
   border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #cbd5e1 !important;
 }
 
 .mnH .c::before {
@@ -200,9 +199,10 @@ svg .line {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 4px 10px 4px;
+  padding: 8px 6px 12px 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  background: transparent !important;
 }
 
 .mMenu {
@@ -214,6 +214,7 @@ svg .line {
 .mMenu a {
   font-size: 0.85rem;
   font-weight: 700;
+  color: #cbd5e1 !important;
 }
 
 .mNav svg {
@@ -221,16 +222,6 @@ svg .line {
   height: 18px !important;
   fill: currentColor;
   transform: rotate(45deg);
-}
-
-.mnH,
-.mnH .c,
-.mnMob,
-.mnMen,
-.mMenu li,
-.mMenu li a {
-  background-color: transparent !important;
-  color: #cbd5e1 !important;
 }
 
 .mnMn {
@@ -244,9 +235,7 @@ svg .line {
 }
 
 .mnMn li.br {
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 4px;
 }
 
@@ -258,10 +247,10 @@ svg .line {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 10px;
+  padding: 10px 12px;
   font-size: 0.94rem;
   font-weight: 700;
-  background-color: transparent !important;
+  background: transparent !important;
   color: #dbe2f1 !important;
   border-radius: 10px;
   transition: background 0.15s ease, color 0.15s ease;
@@ -272,12 +261,6 @@ svg .line {
   color: #79a8ff !important;
 }
 
-.mnMn li.br.active a.a,
-.mnMn li.br a.a.active {
-  background: rgba(64, 121, 255, 0.2) !important;
-  color: #93b8ff !important;
-}
-
 .bx-custom {
   display: inline-flex;
   align-items: center;
@@ -285,7 +268,6 @@ svg .line {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  color: #6586c9;
 }
 
 .bx-custom svg {
