@@ -8,23 +8,16 @@
 <meta content='max-image-preview:large' name='robots' />
 <title>Radio - Hikari Play</title>
 
-<!-- Enlace al CSS local -->
-<link href="css/style.css" rel="stylesheet">
-<!-- Enlace al estilo original de la plantilla para asegurar el diseño base -->
-<link href="https://dl.dropbox.com/s/83ley00l5ongj2v/style.css" rel="stylesheet">
-
 <script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans&display=swap" rel="stylesheet">
 <link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="css/radio.css">
+<link rel="stylesheet" href="./css/radio.css">
 <meta name="theme-color" content="#0f0f0f">
 <link rel="apple-touch-icon" href="img/Logo.png">
-
-
 </head>
 <body class='oneGrd MN-2 mobS hdMn bD onIndx onHm drK' id='mainCont'>
-<script>/*<![CDATA[*/ localStorage.setItem('mode', 'darkmode'); /*]]>*/</script>
+<script>localStorage.setItem('mode', 'darkmode');</script>
 
 <input class='prfI hidden' id='offPrf' type='checkbox' />
 <input class='navI hidden' id='offNav' type='checkbox' />
@@ -35,7 +28,7 @@
     <div class='headCn'>
       <div class='headD headL'>
         <div class='headIc'>
-          <label class='tNav tIc bIc' for='offNav'>
+          <label class='tNav tIc bIc' for='offNav' aria-label="Abrir menú">
             <svg class='line' viewBox='0 0 24 24'><line x1='3' x2='21' y1='12' y2='12'></line><line x1='3' x2='21' y1='5' y2='5'></line><line x1='3' x2='21' y1='19' y2='19'></line></svg>
           </label>
         </div>
@@ -67,8 +60,8 @@
                   </a>
                 </li>
                 <li id="auth-container">
-                  <a href="login.html">
-                    <span aria-label='Iniciar sesión' class='tSrch tIc bIc'>
+                  <a href="login.html" aria-label='Iniciar sesión'>
+                    <span class='tSrch tIc bIc'>
                       <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5m0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3m9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
                       </svg>
@@ -96,8 +89,8 @@
           <div class='mnMob section' id='nav-widget-1'>
             <div class='widget PageList' data-version='2' id='PageList002'>
               <ul class='mMenu'>
-                <li><a>Telegram</a></li>
-                <li><a>Zerimar</a></li>
+                <li><a href="#">Telegram</a></li>
+                <li><a href="#">Zerimar</a></li>
               </ul>
             </div>
             <div class='widget LinkList' data-version='2' id='LinkList002'>
@@ -121,9 +114,9 @@
                 <li class='br'>
                   <a href="anime.html" class="a">
                     <span class="bx-custom" aria-hidden="true">
-                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" fill="#6586c9" aria-hidden="true">
-                    <path d="M31.535,56c0,0,2.326,0,2.465,0c8.175,0,14.927-5.902,15.875-13.535L54.61,41.2l4-1.06v-4v-7.48 c0-13.46-11.35-24.41-25.3-24.41c-0.52,0-4.68,0-4.68,0C15.26,4.25,4.39,15.2,4.39,28.66v11.21l10.777,2.875 C16.259,50.217,23.173,56,31.535,56z M34,52c-6.608,0-11.986-5.062-12-11.289l0.74-8.604l7.662,3.831l0.899-4.096l8.604,8.479 l1.658-8.972l4.43,9.698C45.791,47.119,40.489,52,34,52z M12.05,28.66c0-11.25,9.54-20.41,21.26-20.41 c11.72,0,21.25,9.16,21.25,20.41v8.553l-5.276,1.409l-9.349-20.471L37.344,32.18l-8.396-8.271l-1.351,6.154l-8.338-4.169 l-1.082,12.588L12.05,36.85V28.66z"/>
-                     </svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" fill="#6586c9" aria-hidden="true">
+                        <path d="M31.535,56c0,0,2.326,0,2.465,0c8.175,0,14.927-5.902,15.875-13.535L54.61,41.2l4-1.06v-4v-7.48 c0-13.46-11.35-24.41-25.3-24.41c-0.52,0-4.68,0-4.68,0C15.26,4.25,4.39,15.2,4.39,28.66v11.21l10.777,2.875 C16.259,50.217,23.173,56,31.535,56z M34,52c-6.608,0-11.986-5.062-12-11.289l0.74-8.604l7.662,3.831l0.899-4.096l8.604,8.479 l1.658-8.972l4.43,9.698C45.791,47.119,40.489,52,34,52z M12.05,28.66c0-11.25,9.54-20.41,21.26-20.41 c11.72,0,21.25,9.16,21.25,20.41v8.553l-5.276,1.409l-9.349-20.471L37.344,32.18l-8.396-8.271l-1.351,6.154l-8.338-4.169 l-1.082,12.588L12.05,36.85V28.66z"/>
+                      </svg>
                     </span>
                     <span>Anime</span>
                   </a>
@@ -259,10 +252,6 @@
     </div>
   </div>
 </div>
-
-<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
-<script src='https://dl.dropbox.com/s/x2to4fmvv2ftcqn/xscript.js'></script>
 
 <script>
   // =========================================================================

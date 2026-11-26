@@ -8,7 +8,7 @@
 
 <link href='https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap' rel='stylesheet'/>
 <link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet'/>
-<link rel="stylesheet" href="css/buscador.css">
+<link rel="stylesheet" href="./css/buscador.css">
 <link rel="icon" href="img/Logo.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f0f0f">
@@ -87,7 +87,7 @@
             <option value="western">Western</option>
           </select>
         </label>
-        <span class="results-count" id="resultsCount">3 títulos</span>
+        <span class="results-count" id="resultsCount">0 títulos</span>
       </div>
     </div>
 
@@ -158,14 +158,7 @@
       if (query && selectedGenre) {
         titleEl.textContent = `"${inputEl.value.trim()}" en ${genreLabel}`;
       } else if (query) {
-        titleEl.textContent = `Resultados para "${inputEl.value.trim()}"`;
-      } else if (selectedGenre) {
-        titleEl.textContent = genreLabel;
-      } else {
-        titleEl.textContent = "Catálogo";
-      }
-
-      countEl.textContent = filtrados.length === 1 ? "1 título" : `${filtrados.length} títulos`;
+        titleEl.textContent = `Resultados para "${inputEl.value.trim()}"`; } else if (selectedGenre) { titleEl.textContent = genreLabel; } else { titleEl.textContent = "Catálogo"; }  countEl.textContent = filtrados.length === 1 ? "1 título" : `${filtrados.length} títulos`;
       emptyEl.classList.toggle('show', filtrados.length === 0);
       if (filtrados.length === 0) {
         emptyMsgEl.textContent = "No encontramos ningún título con ese filtro o búsqueda.";

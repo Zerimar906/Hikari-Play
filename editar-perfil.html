@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html dir='ltr' lang='es'>
 <head>
-<meta name="google" content="notranslate">  
+<meta name="google" content="notranslate">
 <meta charset='UTF-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 <title>Editar Perfil - Hikari Play</title>
-<link href="css/style.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="img/Logo.png">
-<link rel="stylesheet" href="css/editar-perfil.css">
-<meta name="theme-color" content="#0b0c10">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/Logo2.png">
+<link rel="stylesheet" href="./css/editar-perfil.css">
+<meta name="theme-color" content="#0b0c10">
 </head>
 <body>
 
 <div class="social-card">
-  <a href="perfil.html" class="btn-back" title="Volver al perfil"><i class="fas fa-arrow-left"></i></a>
+  <a href="perfil.html" class="btn-back" title="Volver al perfil" aria-label="Volver al perfil">
+    <i class="fas fa-arrow-left"></i>
+  </a>
   <button type="button" class="btn-top-banner" onclick="document.getElementById('bannerFile').click()">
     <i class="fas fa-image"></i> Fondo
   </button>
@@ -42,19 +44,19 @@
         <div class="section-label">Identidad</div>
 
         <div class="field-group">
-          <label>Nombre de Usuario Único (@user)</label>
+          <label for="username">Nombre de Usuario Único (@user)</label>
           <input type="text" id="username" class="clean-input" required placeholder="adalberto01">
           <div id="userError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
         </div>
 
         <div class="field-group">
-          <label>Nombre Visual</label>
+          <label for="fullname">Nombre Visual</label>
           <input type="text" id="fullname" class="clean-input" required placeholder="Tu Nombre">
           <div id="nameLockError" class="error-msg">Solo puedes cambiar tu nombre visual cada 7 días.</div>
         </div>
 
         <div class="field-group">
-          <label>Edad</label>
+          <label for="age">Edad</label>
           <input type="number" id="age" class="clean-input" required min="13" max="100">
           <div class="checkbox-row">
             <input type="checkbox" id="hideAge">
@@ -67,7 +69,7 @@
         <div class="section-label">Sobre ti y Gustos</div>
 
         <div class="field-group">
-          <label>Biografía</label>
+          <label for="bio">Biografía</label>
           <textarea id="bio" class="clean-input" rows="2" maxlength="140" placeholder="Cuéntanos algo sobre ti..." oninput="updateBioCounter()"></textarea>
           <div id="bioCounter" class="char-counter">0/140</div>
           <div id="bioError" class="error-msg">No se permiten palabras obscenas en el perfil.</div>
@@ -100,7 +102,7 @@
 
         <div id="changeEmailPanel" class="security-subpanel">
           <div class="field-group">
-            <label>Nuevo correo electrónico</label>
+            <label for="newEmailInput">Nuevo correo electrónico</label>
             <input type="email" id="newEmailInput" class="clean-input" placeholder="nuevo@correo.com">
             <div id="newEmailError" class="error-msg"></div>
             <div id="newEmailSuccess" class="success-msg">Correo actualizado correctamente.</div>
@@ -110,7 +112,7 @@
 
         <div id="changePasswordPanel" class="security-subpanel">
           <div class="field-group" id="currentPasswordGroup">
-            <label>Contraseña actual</label>
+            <label for="currentPasswordInput">Contraseña actual</label>
             <div class="password-wrapper">
               <input type="password" id="currentPasswordInput" class="clean-input" placeholder="Escribe tu contraseña actual">
               <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('currentPasswordInput', 'currentPassEye')" title="Mostrar u ocultar contraseña">
@@ -119,7 +121,7 @@
             </div>
           </div>
           <div class="field-group">
-            <label>Nueva contraseña</label>
+            <label for="newPasswordInput">Nueva contraseña</label>
             <div class="password-wrapper">
               <input type="password" id="newPasswordInput" class="clean-input" placeholder="Mínimo 6 caracteres">
               <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('newPasswordInput', 'newPassEye')" title="Mostrar u ocultar contraseña">
@@ -128,7 +130,7 @@
             </div>
           </div>
           <div class="field-group">
-            <label>Confirmar nueva contraseña</label>
+            <label for="confirmPasswordInput">Confirmar nueva contraseña</label>
             <div class="password-wrapper">
               <input type="password" id="confirmPasswordInput" class="clean-input" placeholder="Repite la contraseña">
               <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('confirmPasswordInput', 'confirmPassEye')" title="Mostrar u ocultar contraseña">
@@ -159,7 +161,7 @@
     </div>
     <input type="text" id="confirmDeleteInput" class="clean-input" placeholder="Escribe CONFIRMAR" autocomplete="off" oninput="checkConfirmText()">
     <div class="modal-actions">
-      <button type="button" class="btn-modal-cancel" onclick="document.getElementById('deleteModal').classList.remove('show')">Cancelar</button>
+      <button type="button" class="btn-modal-cancel" onclick="closeDeleteModal()">Cancelar</button>
       <button type="button" id="btnConfirmDelete" class="btn-modal-confirm" onclick="executeAccountDeletion()">Eliminar</button>
     </div>
   </div>
@@ -167,8 +169,8 @@
 
 <script>
 const availableTags = [
-  "Anime", "Dramas", "Música", "Arte", 
-  "Comer chocolate", "Videojuegos", "Tecnología", 
+  "Anime", "Dramas", "Música", "Arte",
+  "Comer chocolate", "Videojuegos", "Tecnología",
   "Lectura", "Deportes", "Cosplay", "Manga"
 ];
 
@@ -226,7 +228,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function toggleSecurityPanel(panelId) {
   ["changeEmailPanel", "changePasswordPanel"].forEach(id => {
     const panel = document.getElementById(id);
-    panel.style.display = (id === panelId && panel.style.display !== "block") ? "block" : "none";
+    const shouldOpen = (id === panelId && !panel.classList.contains("open"));
+    panel.classList.toggle("open", shouldOpen);
+    panel.style.display = shouldOpen ? "block" : "none";
   });
   ["newEmailError", "newEmailSuccess", "newPasswordError", "newPasswordSuccess"].forEach(id => {
     const el = document.getElementById(id);
@@ -401,9 +405,9 @@ function selectTag(tag) {
 function renderPills() {
   const container = document.getElementById("selectedPills");
   const label = document.getElementById("dropdownLabel");
-  
-  label.textContent = selectedTags.length > 0 
-    ? `${selectedTags.length}/3 seleccionados` 
+
+  label.textContent = selectedTags.length > 0
+    ? `${selectedTags.length}/3 seleccionados`
     : "Seleccionar gustos...";
 
   container.innerHTML = selectedTags.map(tag => `
@@ -513,7 +517,7 @@ function openDeleteModal() {
 }
 
 function closeDeleteModal(e) {
-  if (e.target.id === "deleteModal") {
+  if (!e || e.target.id === "deleteModal" || e.currentTarget.classList.contains("btn-modal-cancel")) {
     document.getElementById("deleteModal").classList.remove("show");
   }
 }
