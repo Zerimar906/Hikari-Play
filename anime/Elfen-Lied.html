@@ -9,10 +9,108 @@
 <!-- Enlace al CSS local unificado -->
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" href="../img/Logo.png">
 <link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#0f0f0f">
 <link rel="apple-touch-icon" href="../img/Logo.png">
+
+<style>
+  .ConjuntoHeadCont {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+  }
+
+  .movie-head-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .movie-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Botón de Me gusta con contador */
+  .like-counter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    background: #151922;
+    color: #f3f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .like-counter-btn:hover {
+    background: #1c2230;
+    transform: translateY(-1px);
+  }
+
+  .like-counter-btn.liked {
+    background: rgba(255, 59, 92, 0.16);
+    border-color: #ff3b5c;
+    color: #ff6b84;
+  }
+
+  .like-counter-btn .like-count {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+  }
+
+  .like-counter-btn.liked .like-count {
+    background: rgba(255, 59, 92, 0.24);
+    color: #fff;
+  }
+
+  /* Botón de Favoritos en forma de velero */
+  .sail-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    background: #151922;
+    color: #f3f5f9;
+    border: 1px solid rgba(64, 121, 255, 0.35);
+    border-radius: 14px 14px 4px 4px;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sail-save-btn svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+  }
+
+  .sail-save-btn:hover {
+    background: #1c2230;
+    transform: translateY(-1px);
+  }
+
+  .sail-save-btn.saved {
+    background: rgba(64, 121, 255, 0.18);
+    border-color: #4079ff;
+    color: #8ab2ff;
+  }
+</style>
 </head>
 <body class="drK" id='mainCont'>
 <script>localStorage.setItem('mode', 'darkmode');</script>
@@ -27,7 +125,27 @@
     <div class="SingleHead">
         <img src="../img/Elfen-lied.jpg" alt="Elfen Lied" title="Elfen Lied">
     </div>
-    <span class="movie-section-title">Elfen Lied</span>
+
+    <div class="movie-head-info">
+        <span class="movie-section-title">Elfen Lied</span>
+
+        <div class="movie-action-row">
+            <button type="button" id="btnMovieLike" class="like-counter-btn" onclick="toggleMovieLike()">
+                <i class="fas fa-heart"></i>
+                <span>Me gusta</span>
+                <span id="movieLikeCount" class="like-count">0</span>
+            </button>
+
+            <button type="button" id="btnMovieSail" class="sail-save-btn" onclick="toggleMovieFavorite()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 3L5 15h7V3z"></path>
+                    <path d="M13 7l6 8h-6V7z"></path>
+                    <path d="M3 18h18l-2.5 3h-13L3 18z"></path>
+                </svg>
+                <span class="sail-label">Favoritos</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div style="clear: both;"></div>
@@ -67,7 +185,98 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
 <script>
+const MOVIE_DATA = {
+    id: "elfen-lied",
+    title: "Elfen Lied",
+    type: "Anime",
+    poster: "img/Elfen-lied.jpg",
+    url: window.location.pathname
+};
+
+function getStoredFavorites() {
+    try {
+        return JSON.parse(localStorage.getItem("hikariFavorites") || "[]");
+    } catch {
+        return [];
+    }
+}
+
+function syncMovieActionsUI() {
+    // Sincronizar botón de Me gusta
+    const likeKey = "hikariLikes_" + MOVIE_DATA.id;
+    let likeState = { count: 0, liked: false };
+    try {
+        const parsed = JSON.parse(localStorage.getItem(likeKey) || "null");
+        if (parsed && typeof parsed.count === "number") {
+            likeState = parsed;
+        }
+    } catch {}
+
+    const btnLike = document.getElementById("btnMovieLike");
+    const countEl = document.getElementById("movieLikeCount");
+    if (btnLike && countEl) {
+        btnLike.classList.toggle("liked", !!likeState.liked);
+        countEl.textContent = likeState.count;
+    }
+
+    // Sincronizar botón de Favoritos (velero)
+    const favs = getStoredFavorites();
+    const isSaved = favs.some(item => String(item.id) === MOVIE_DATA.id || item.title === MOVIE_DATA.title);
+    const btnSail = document.getElementById("btnMovieSail");
+    if (btnSail) {
+        btnSail.classList.toggle("saved", isSaved);
+        const label = btnSail.querySelector(".sail-label");
+        if (label) {
+            label.textContent = isSaved ? "Guardado" : "Favoritos";
+        }
+    }
+}
+
+function toggleMovieLike() {
+    const likeKey = "hikariLikes_" + MOVIE_DATA.id;
+    let likeState = { count: 0, liked: false };
+    try {
+        const parsed = JSON.parse(localStorage.getItem(likeKey) || "null");
+        if (parsed && typeof parsed.count === "number") {
+            likeState = parsed;
+        }
+    } catch {}
+
+    if (likeState.liked) {
+        likeState.liked = false;
+        likeState.count = Math.max(0, likeState.count - 1);
+    } else {
+        likeState.liked = true;
+        likeState.count += 1;
+    }
+
+    localStorage.setItem(likeKey, JSON.stringify(likeState));
+    syncMovieActionsUI();
+}
+
+function toggleMovieFavorite() {
+    const favs = getStoredFavorites();
+    const idx = favs.findIndex(item => String(item.id) === MOVIE_DATA.id || item.title === MOVIE_DATA.title);
+
+    if (idx >= 0) {
+        favs.splice(idx, 1);
+    } else {
+        favs.unshift({
+            id: MOVIE_DATA.id,
+            title: MOVIE_DATA.title,
+            type: MOVIE_DATA.type,
+            poster: MOVIE_DATA.poster,
+            url: MOVIE_DATA.url
+        });
+    }
+
+    localStorage.setItem("hikariFavorites", JSON.stringify(favs));
+    syncMovieActionsUI();
+}
+
 $(function() {
+    syncMovieActionsUI();
+
     var Accordion = function(el, multiple) {
         this.el = el || {};
         this.multiple = multiple || false;

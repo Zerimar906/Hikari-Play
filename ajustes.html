@@ -38,7 +38,7 @@
   </section>
 
   <section class="quick-grid">
-    <button type="button" class="quick-card fav" onclick="document.getElementById('favoritosPanel').scrollIntoView({behavior:'smooth'})">
+    <button type="button" class="quick-card fav" onclick="document.getElementById('favoritosSec').scrollIntoView({behavior:'smooth'})">
       <i class="fas fa-heart"></i>
       <span>Favoritos</span>
     </button>
@@ -52,41 +52,23 @@
     </button>
   </section>
 
-  <!-- Favoritos: guardar para recordar y recomendar -->
-  <section id="favoritosPanel" class="panel-card">
-    <div class="section-head" style="margin: 0 0 10px 0;">
-      <h2 class="section-title"><i class="fas fa-heart" style="color:#ff5c77;"></i> Favoritos para recordar y recomendar</h2>
-      <span id="favCountBadge" class="section-link">0 guardados</span>
+  <!-- Carril de Favoritos (poblado desde el botón de velero en la descripción de cada película) -->
+  <section id="favoritosSec">
+    <div class="section-head">
+      <h2 class="section-title">Favoritos</h2>
+      <span id="favRailCount" class="section-link">0 guardados</span>
     </div>
-
-    <div class="fav-form">
-      <input type="text" id="favTitleInput" class="input-dark" placeholder="Nombre de la película, serie o anime...">
-      <select id="favTypeSelect" class="select-dark">
-        <option value="Película">Película</option>
-        <option value="Serie">Serie</option>
-        <option value="Anime">Anime</option>
-        <option value="Doramas">Doramas</option>
-      </select>
-    </div>
-
-    <div class="fav-note-row">
-      <input type="text" id="favNoteInput" class="input-dark" placeholder="Recordatorio o motivo para recomendar (opcional)...">
-      <button type="button" class="btn-primary" onclick="addFavorite()">Guardar</button>
-    </div>
-
-    <div id="favList" class="fav-list"></div>
+    <div id="favoritesRail" class="rail-row"></div>
   </section>
 
-  <!-- Historial reciente -->
+  <!-- Carril de Historial reciente -->
   <section id="historialSec">
     <div class="section-head">
       <h2 class="section-title">Historial reciente</h2>
-      <a href="anime.html" class="section-link">Explorar &gt;</a>
+      <a href="index.html" class="section-link">Explorar &gt;</a>
     </div>
-    <div id="historyList" class="history-row">
-      <div class="history-item">
-        <div class="history-poster">Sin historial reciente</div>
-        <div class="history-name">Empieza a ver algo</div>
+    <div id="historyList" class="rail-row">
+      <div class="rail-card">
       </div>
     </div>
   </section>
@@ -121,7 +103,7 @@
     <div id="panelIdiomas" class="sub-panel">
       <div class="sub-field">
         <label class="sub-label" for="selAppLang">Idioma de la app</label>
-        <select id="selAppLang" class="input-dark select-dark" onchange="saveLangs()">
+        <select id="selAppLang" class="select-dark" onchange="saveLangs()">
           <option value="Español">Español</option>
           <option value="English">English</option>
           <option value="日本語">日本語</option>
@@ -129,7 +111,7 @@
       </div>
       <div class="sub-field">
         <label class="sub-label" for="selAudioLang">Idioma de audio de películas y series</label>
-        <select id="selAudioLang" class="input-dark select-dark" onchange="saveLangs()">
+        <select id="selAudioLang" class="select-dark" onchange="saveLangs()">
           <option value="Japonés (Original)">Japonés (Original)</option>
           <option value="Español Latino">Español Latino</option>
           <option value="Español España">Español España</option>
@@ -139,7 +121,7 @@
       </div>
       <div class="sub-field">
         <label class="sub-label" for="selSubLang">Idioma de subtítulos de películas y series</label>
-        <select id="selSubLang" class="input-dark select-dark" onchange="saveLangs()">
+        <select id="selSubLang" class="select-dark" onchange="saveLangs()">
           <option value="Español">Español</option>
           <option value="English">English</option>
           <option value="Desactivados">Desactivados</option>
@@ -161,7 +143,7 @@
     <div id="panelCalidad" class="sub-panel">
       <div class="sub-field">
         <label class="sub-label" for="selVideoQuality">Calidad preferida de video</label>
-        <select id="selVideoQuality" class="input-dark select-dark" onchange="saveQualitySettings()">
+        <select id="selVideoQuality" class="select-dark" onchange="saveQualitySettings()">
           <option value="Automática">Automática</option>
           <option value="1080p (Full HD)">1080p (Full HD)</option>
           <option value="720p (HD)">720p (HD)</option>
@@ -250,7 +232,7 @@
     applyEnergyClass();
     updateQualitySummary();
 
-    renderFavorites();
+    renderFavoritesRail();
   });
 
   function toggleSubPanel(panelId, btnId) {
@@ -302,88 +284,129 @@
     }
   }
 
-  function saveFavorites(list) {
+  function setFavorites(list) {
     localStorage.setItem("hikariFavorites", JSON.stringify(list));
-    renderFavorites();
+    if (typeof renderFavoritesRail === "function") {
+      renderFavoritesRail();
+    }
   }
 
-  function addFavorite() {
-    const titleInput = document.getElementById("favTitleInput");
-    const typeSelect = document.getElementById("favTypeSelect");
-    const noteInput = document.getElementById("favNoteInput");
+  function isMovieFavorite(idOrTitle) {
+    const list = getFavorites();
+    return list.some(item => String(item.id) === String(idOrTitle) || item.title === idOrTitle);
+  }
 
-    const title = titleInput.value.trim();
-    if (!title) {
-      showToast("Escribe el nombre de la película o serie");
-      return;
+  /* Llamar desde el botón en forma de velero en la descripción de la película */
+  function toggleFavoriteMovie(movie, btnEl) {
+    if (!movie || !movie.title) return;
+    const movieId = movie.id || movie.title;
+    const list = getFavorites();
+    const existsIndex = list.findIndex(item => String(item.id) === String(movieId) || item.title === movie.title);
+
+    let savedNow = false;
+    if (existsIndex >= 0) {
+      list.splice(existsIndex, 1);
+      showToast("Quitado de Favoritos");
+    } else {
+      list.unshift({
+        id: movieId,
+        title: movie.title,
+        type: movie.type || "Película",
+        poster: movie.poster || "",
+        url: movie.url || ""
+      });
+      savedNow = true;
+      showToast("Guardado en Favoritos");
     }
 
-    const list = getFavorites();
-    list.unshift({
-      id: Date.now(),
-      title,
-      type: typeSelect.value,
-      note: noteInput.value.trim()
-    });
-
-    titleInput.value = "";
-    noteInput.value = "";
-    saveFavorites(list);
-    showToast("Guardado en favoritos");
+    setFavorites(list);
+    if (btnEl) {
+      syncSailButtonState(btnEl, savedNow);
+    }
   }
 
-  function deleteFavorite(id) {
-    const list = getFavorites().filter(item => item.id !== id);
-    saveFavorites(list);
-    showToast("Eliminado de favoritos");
+  function syncSailButtonState(btnEl, saved) {
+    if (!btnEl) return;
+    btnEl.classList.toggle("saved", !!saved);
+    const label = btnEl.querySelector(".sail-label");
+    if (label) {
+      label.textContent = saved ? "Guardado" : "Favoritos";
+    }
   }
 
-  function recommendFavorite(id) {
-    const item = getFavorites().find(f => f.id === id);
+  function removeFavoriteById(id) {
+    const list = getFavorites().filter(item => String(item.id) !== String(id));
+    setFavorites(list);
+    showToast("Quitado de Favoritos");
+  }
+
+  function copyRecommendation(id) {
+    const item = getFavorites().find(f => String(f.id) === String(id));
     if (!item) return;
-
-    const text = `Te recomiendo este ${item.type.toLowerCase()} en Hikari Play: "${item.title}"${item.note ? " — " + item.note : ""}`;
+    const text = `Te recomiendo ${item.title} (${item.type}) en Hikari Play`;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast("Recomendación copiada para compartir");
+        showToast("Recomendación copiada");
       }).catch(() => {
         showToast(text);
       });
     } else {
-      showToast("Recomendación lista para compartir");
+      showToast("Recomendación lista");
     }
   }
 
-  function renderFavorites() {
+  function renderFavoritesRail() {
+    const rail = document.getElementById("favoritesRail");
+    const counter = document.getElementById("favRailCount");
+    if (!rail) return;
+
     const list = getFavorites();
-    const container = document.getElementById("favList");
-    document.getElementById("favCountBadge").textContent = `${list.length} guardado${list.length === 1 ? "" : "s"}`;
+    if (counter) {
+      counter.textContent = `${list.length} guardado${list.length === 1 ? "" : "s"}`;
+    }
 
     if (!list.length) {
-      container.innerHTML = `<div style="color:#9aa4b8; font-size:0.82rem; padding:6px 2px;">Aún no guardas nada. Agrega una película o serie para recordarla o recomendarla.</div>`;
+      rail.innerHTML = `
+        <div class="rail-card">
+          <div class="rail-poster">Sin favoritos aún</div>
+          <div class="rail-title">Usa el botón velero</div>
+        </div>
+      `;
       return;
     }
 
-    container.innerHTML = list.map(item => `
-      <div class="fav-item">
-        <div class="fav-info">
-          <div class="fav-title">${escapeHtml(item.title)}<span class="fav-badge">${escapeHtml(item.type)}</span></div>
-          <div class="fav-note">${item.note ? escapeHtml(item.note) : "Listo para recomendar"}</div>
+    rail.innerHTML = list.map(item => {
+      const posterContent = item.poster
+        ? `<img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.title)}">`
+        : `<span>${escapeHtml(item.type)}</span>`;
+
+      const openTagStart = item.url ? `<a href="${escapeHtml(item.url)}" style="text-decoration:none; color:inherit;">` : `<div>`;
+      const openTagEnd = item.url ? `</a>` : `</div>`;
+
+      return `
+        <div class="rail-card">
+          ${openTagStart}
+            <div class="rail-poster">
+              <span class="rail-badge">${escapeHtml(item.type)}</span>
+              ${posterContent}
+            </div>
+            <div class="rail-title">${escapeHtml(item.title)}</div>
+          ${openTagEnd}
+          <div class="rail-actions">
+            <button type="button" class="rail-mini-btn" title="Copiar recomendación" onclick="copyRecommendation('${escapeHtml(String(item.id))}')">
+              <i class="fas fa-share"></i>
+            </button>
+            <button type="button" class="rail-mini-btn" title="Quitar" onclick="removeFavoriteById('${escapeHtml(String(item.id))}')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
-        <div class="fav-actions">
-          <button type="button" class="icon-btn rec" title="Copiar recomendación" onclick="recommendFavorite(${item.id})">
-            <i class="fas fa-share"></i>
-          </button>
-          <button type="button" class="icon-btn del" title="Quitar" onclick="deleteFavorite(${item.id})">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   function escapeHtml(str) {
-    return str
+    return String(str)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
@@ -401,6 +424,7 @@
   let toastTimer = null;
   function showToast(msg) {
     const el = document.getElementById("toastMsg");
+    if (!el) return;
     el.textContent = msg;
     el.classList.add("show");
     clearTimeout(toastTimer);
