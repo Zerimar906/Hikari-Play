@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<meta name="google" content="notranslate">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cuenta y Ajustes - Hikari Play</title>
+<title>Ajustes y Cuenta - Hikari Play</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="img/Logo.png">
 <link rel="stylesheet" href="./css/ajustes.css">
 <meta name="theme-color" content="#0b0c10">
-
 </head>
 <body>
 
 <main class="account-wrap">
+  <div class="top-bar">
+    <a href="perfil.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Perfil
+    </a>
+    <a href="index.html" class="back-link">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+  </div>
+
   <section class="account-hero">
     <div class="hero-user">
       <img id="accAvatar" class="hero-avatar" src="img/Logo.png" alt="Avatar">
@@ -23,16 +32,16 @@
         <div id="accId" class="hero-id">ID: 00000000</div>
       </div>
     </div>
-    <button type="button" class="hero-bell" title="Notificaciones" onclick="alert('No tienes notificaciones nuevas.')">
+    <button type="button" class="hero-bell" title="Notificaciones" onclick="showToast('No tienes notificaciones nuevas')">
       <i class="far fa-bell"></i>
     </button>
   </section>
 
   <section class="quick-grid">
-    <a href="perfil.html" class="quick-card fav">
+    <button type="button" class="quick-card fav" onclick="document.getElementById('favoritosPanel').scrollIntoView({behavior:'smooth'})">
       <i class="fas fa-heart"></i>
       <span>Favoritos</span>
-    </a>
+    </button>
     <button type="button" class="quick-card hist" onclick="document.getElementById('historialSec').scrollIntoView({behavior:'smooth'})">
       <i class="far fa-clock"></i>
       <span>Historial</span>
@@ -43,6 +52,32 @@
     </button>
   </section>
 
+  <!-- Favoritos: guardar para recordar y recomendar -->
+  <section id="favoritosPanel" class="panel-card">
+    <div class="section-head" style="margin: 0 0 10px 0;">
+      <h2 class="section-title"><i class="fas fa-heart" style="color:#ff5c77;"></i> Favoritos para recordar y recomendar</h2>
+      <span id="favCountBadge" class="section-link">0 guardados</span>
+    </div>
+
+    <div class="fav-form">
+      <input type="text" id="favTitleInput" class="input-dark" placeholder="Nombre de la película, serie o anime...">
+      <select id="favTypeSelect" class="select-dark">
+        <option value="Película">Película</option>
+        <option value="Serie">Serie</option>
+        <option value="Anime">Anime</option>
+        <option value="Doramas">Doramas</option>
+      </select>
+    </div>
+
+    <div class="fav-note-row">
+      <input type="text" id="favNoteInput" class="input-dark" placeholder="Recordatorio o motivo para recomendar (opcional)...">
+      <button type="button" class="btn-primary" onclick="addFavorite()">Guardar</button>
+    </div>
+
+    <div id="favList" class="fav-list"></div>
+  </section>
+
+  <!-- Historial reciente -->
   <section id="historialSec">
     <div class="section-head">
       <h2 class="section-title">Historial reciente</h2>
@@ -66,68 +101,114 @@
         <i class="fas fa-user-cog"></i>
         <span>
           Gestión de cuenta
-          <span class="setting-sub">Editar perfil, avatar o gustos</span>
+          <span class="setting-sub">Editar perfil, avatar, banner o gustos</span>
         </span>
       </span>
       <i class="fas fa-chevron-right setting-chevron"></i>
     </button>
 
-    <div class="setting-row">
+    <!-- Subsección de Idiomas -->
+    <button type="button" id="btnSubIdiomas" class="setting-row" onclick="toggleSubPanel('panelIdiomas', 'btnSubIdiomas')">
       <span class="setting-left">
-        <i class="fas fa-shield-alt"></i>
+        <i class="fas fa-language"></i>
         <span>
-          Filtro +18
-          <span class="setting-sub">Mostrar contenido restringido</span>
-        </span>
-      </span>
-      <label class="switch">
-        <input type="checkbox" id="toggleAdult" onchange="saveSetting('hikariAdultFilter', this.checked)">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <div class="setting-row">
-      <span class="setting-left">
-        <i class="fas fa-play-circle"></i>
-        <span>
-          Siguiente episodio automático
-          <span class="setting-sub">Continuar reproducción sin pausas</span>
-        </span>
-      </span>
-      <label class="switch">
-        <input type="checkbox" id="toggleAutoplay" onchange="saveSetting('hikariAutoplay', this.checked)">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <button type="button" class="setting-row" onclick="cycleAudioPref()">
-      <span class="setting-left">
-        <i class="fas fa-closed-captioning"></i>
-        <span>
-          Audio y subtítulos
-          <span id="audioSubLabel" class="setting-sub">Audio: Japonés · Subtítulos: Español</span>
+          Idiomas
+          <span id="summaryIdiomas" class="setting-sub">App · Audio · Subtítulos</span>
         </span>
       </span>
       <i class="fas fa-chevron-right setting-chevron"></i>
     </button>
+    <div id="panelIdiomas" class="sub-panel">
+      <div class="sub-field">
+        <label class="sub-label" for="selAppLang">Idioma de la app</label>
+        <select id="selAppLang" class="input-dark select-dark" onchange="saveLangs()">
+          <option value="Español">Español</option>
+          <option value="English">English</option>
+          <option value="日本語">日本語</option>
+        </select>
+      </div>
+      <div class="sub-field">
+        <label class="sub-label" for="selAudioLang">Idioma de audio de películas y series</label>
+        <select id="selAudioLang" class="input-dark select-dark" onchange="saveLangs()">
+          <option value="Japonés (Original)">Japonés (Original)</option>
+          <option value="Español Latino">Español Latino</option>
+          <option value="Español España">Español España</option>
+          <option value="Inglés">Inglés</option>
+          <option value="Coreano">Coreano</option>
+        </select>
+      </div>
+      <div class="sub-field">
+        <label class="sub-label" for="selSubLang">Idioma de subtítulos de películas y series</label>
+        <select id="selSubLang" class="input-dark select-dark" onchange="saveLangs()">
+          <option value="Español">Español</option>
+          <option value="English">English</option>
+          <option value="Desactivados">Desactivados</option>
+        </select>
+      </div>
+    </div>
 
-    <button type="button" class="setting-row" onclick="cycleQualityPref()">
+    <!-- Subsección de Calidad y Datos -->
+    <button type="button" id="btnSubCalidad" class="setting-row" onclick="toggleSubPanel('panelCalidad', 'btnSubCalidad')">
       <span class="setting-left">
         <i class="fas fa-sliders-h"></i>
         <span>
           Calidad y datos
-          <span id="qualityLabel" class="setting-sub">Calidad: Automática</span>
+          <span id="summaryCalidad" class="setting-sub">Video · Ahorro de energía · Ahorro de red</span>
         </span>
       </span>
       <i class="fas fa-chevron-right setting-chevron"></i>
     </button>
+    <div id="panelCalidad" class="sub-panel">
+      <div class="sub-field">
+        <label class="sub-label" for="selVideoQuality">Calidad preferida de video</label>
+        <select id="selVideoQuality" class="input-dark select-dark" onchange="saveQualitySettings()">
+          <option value="Automática">Automática</option>
+          <option value="1080p (Full HD)">1080p (Full HD)</option>
+          <option value="720p (HD)">720p (HD)</option>
+          <option value="480p (Datos bajos)">480p (Datos bajos)</option>
+        </select>
+      </div>
 
-    <button type="button" class="setting-row" onclick="alert('Centro de ayuda y privacidad de Hikari Play.')">
+      <div class="toggle-line">
+        <div>
+          <div class="toggle-line-title">Modo ahorro de energía</div>
+          <div class="toggle-line-desc">Reduce animaciones y transiciones para cuidar la batería</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="chkEnergySaver" onchange="saveQualitySettings()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-line">
+        <div>
+          <div class="toggle-line-title">Ahorro de red / datos móviles</div>
+          <div class="toggle-line-desc">Evita descargas pesadas y prioriza menor consumo de datos</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="chkDataSaver" onchange="saveQualitySettings()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-line">
+        <div>
+          <div class="toggle-line-title">Siguiente episodio automático</div>
+          <div class="toggle-line-desc">Reproduce el siguiente capítulo al terminar</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="chkAutoplay" onchange="saveQualitySettings()">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <button type="button" class="setting-row" onclick="showToast('Ayuda, privacidad y aviso legal de Hikari Play')">
       <span class="setting-left">
         <i class="far fa-question-circle"></i>
         <span>
           Ayuda, privacidad y aviso legal
-          <span class="setting-sub">Soporte y condiciones de uso</span>
+          <span class="setting-sub">Soporte, políticas y uso de datos locales</span>
         </span>
       </span>
       <i class="fas fa-chevron-right setting-chevron"></i>
@@ -135,18 +216,9 @@
   </section>
 </main>
 
-<script>
-  const AUDIO_MODES = [
-    "Audio: Japonés · Subtítulos: Español",
-    "Audio: Español · Subtítulos: Desactivados",
-    "Audio: Original · Subtítulos: Español"
-  ];
-  const QUALITY_MODES = [
-    "Calidad: Automática",
-    "Calidad: Alta (1080p)",
-    "Calidad: Ahorro de datos (480p)"
-  ];
+<div id="toastMsg" class="toast-msg"></div>
 
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     const loggedIn = localStorage.getItem("hikariUserLoggedIn") === "true";
     const name = localStorage.getItem("hikariFullname") || localStorage.getItem("hikariUsername");
@@ -166,38 +238,173 @@
     }
     document.getElementById("accId").textContent = "ID: " + userId;
 
-    document.getElementById("toggleAdult").checked = localStorage.getItem("hikariAdultFilter") === "true";
-    document.getElementById("toggleAutoplay").checked = localStorage.getItem("hikariAutoplay") !== "false";
+    document.getElementById("selAppLang").value = localStorage.getItem("hikariAppLang") || "Español";
+    document.getElementById("selAudioLang").value = localStorage.getItem("hikariAudioLang") || "Japonés (Original)";
+    document.getElementById("selSubLang").value = localStorage.getItem("hikariSubLang") || "Español";
+    updateLangSummary();
 
-    const audioIdx = parseInt(localStorage.getItem("hikariAudioIdx") || "0", 10);
-    document.getElementById("audioSubLabel").textContent = AUDIO_MODES[audioIdx % AUDIO_MODES.length];
+    document.getElementById("selVideoQuality").value = localStorage.getItem("hikariVideoQuality") || "Automática";
+    document.getElementById("chkEnergySaver").checked = localStorage.getItem("hikariEnergySaver") === "true";
+    document.getElementById("chkDataSaver").checked = localStorage.getItem("hikariDataSaver") === "true";
+    document.getElementById("chkAutoplay").checked = localStorage.getItem("hikariAutoplay") !== "false";
+    applyEnergyClass();
+    updateQualitySummary();
 
-    const qualIdx = parseInt(localStorage.getItem("hikariQualityIdx") || "0", 10);
-    document.getElementById("qualityLabel").textContent = QUALITY_MODES[qualIdx % QUALITY_MODES.length];
+    renderFavorites();
   });
 
-  function saveSetting(key, val) {
-    localStorage.setItem(key, String(val));
+  function toggleSubPanel(panelId, btnId) {
+    document.getElementById(panelId).classList.toggle("open");
+    document.getElementById(btnId).classList.toggle("open");
   }
 
-  function cycleAudioPref() {
-    const next = (parseInt(localStorage.getItem("hikariAudioIdx") || "0", 10) + 1) % AUDIO_MODES.length;
-    localStorage.setItem("hikariAudioIdx", String(next));
-    document.getElementById("audioSubLabel").textContent = AUDIO_MODES[next];
+  function saveLangs() {
+    localStorage.setItem("hikariAppLang", document.getElementById("selAppLang").value);
+    localStorage.setItem("hikariAudioLang", document.getElementById("selAudioLang").value);
+    localStorage.setItem("hikariSubLang", document.getElementById("selSubLang").value);
+    updateLangSummary();
+    showToast("Preferencias de idioma guardadas");
   }
 
-  function cycleQualityPref() {
-    const next = (parseInt(localStorage.getItem("hikariQualityIdx") || "0", 10) + 1) % QUALITY_MODES.length;
-    localStorage.setItem("hikariQualityIdx", String(next));
-    document.getElementById("qualityLabel").textContent = QUALITY_MODES[next];
+  function updateLangSummary() {
+    const appLang = document.getElementById("selAppLang").value;
+    const audioLang = document.getElementById("selAudioLang").value;
+    const subLang = document.getElementById("selSubLang").value;
+    document.getElementById("summaryIdiomas").textContent = `App: ${appLang} · Audio: ${audioLang} · Sub: ${subLang}`;
+  }
+
+  function saveQualitySettings() {
+    localStorage.setItem("hikariVideoQuality", document.getElementById("selVideoQuality").value);
+    localStorage.setItem("hikariEnergySaver", String(document.getElementById("chkEnergySaver").checked));
+    localStorage.setItem("hikariDataSaver", String(document.getElementById("chkDataSaver").checked));
+    localStorage.setItem("hikariAutoplay", String(document.getElementById("chkAutoplay").checked));
+    applyEnergyClass();
+    updateQualitySummary();
+    showToast("Calidad y ahorro guardados");
+  }
+
+  function applyEnergyClass() {
+    document.body.classList.toggle("energy-saver", document.getElementById("chkEnergySaver").checked);
+  }
+
+  function updateQualitySummary() {
+    const q = document.getElementById("selVideoQuality").value;
+    const energy = document.getElementById("chkEnergySaver").checked ? "Ahorro energía ON" : "Energía normal";
+    const net = document.getElementById("chkDataSaver").checked ? "Ahorro red ON" : "Red normal";
+    document.getElementById("summaryCalidad").textContent = `${q} · ${energy} · ${net}`;
+  }
+
+  function getFavorites() {
+    try {
+      return JSON.parse(localStorage.getItem("hikariFavorites") || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveFavorites(list) {
+    localStorage.setItem("hikariFavorites", JSON.stringify(list));
+    renderFavorites();
+  }
+
+  function addFavorite() {
+    const titleInput = document.getElementById("favTitleInput");
+    const typeSelect = document.getElementById("favTypeSelect");
+    const noteInput = document.getElementById("favNoteInput");
+
+    const title = titleInput.value.trim();
+    if (!title) {
+      showToast("Escribe el nombre de la película o serie");
+      return;
+    }
+
+    const list = getFavorites();
+    list.unshift({
+      id: Date.now(),
+      title,
+      type: typeSelect.value,
+      note: noteInput.value.trim()
+    });
+
+    titleInput.value = "";
+    noteInput.value = "";
+    saveFavorites(list);
+    showToast("Guardado en favoritos");
+  }
+
+  function deleteFavorite(id) {
+    const list = getFavorites().filter(item => item.id !== id);
+    saveFavorites(list);
+    showToast("Eliminado de favoritos");
+  }
+
+  function recommendFavorite(id) {
+    const item = getFavorites().find(f => f.id === id);
+    if (!item) return;
+
+    const text = `Te recomiendo este ${item.type.toLowerCase()} en Hikari Play: "${item.title}"${item.note ? " — " + item.note : ""}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Recomendación copiada para compartir");
+      }).catch(() => {
+        showToast(text);
+      });
+    } else {
+      showToast("Recomendación lista para compartir");
+    }
+  }
+
+  function renderFavorites() {
+    const list = getFavorites();
+    const container = document.getElementById("favList");
+    document.getElementById("favCountBadge").textContent = `${list.length} guardado${list.length === 1 ? "" : "s"}`;
+
+    if (!list.length) {
+      container.innerHTML = `<div style="color:#9aa4b8; font-size:0.82rem; padding:6px 2px;">Aún no guardas nada. Agrega una película o serie para recordarla o recomendarla.</div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(item => `
+      <div class="fav-item">
+        <div class="fav-info">
+          <div class="fav-title">${escapeHtml(item.title)}<span class="fav-badge">${escapeHtml(item.type)}</span></div>
+          <div class="fav-note">${item.note ? escapeHtml(item.note) : "Listo para recomendar"}</div>
+        </div>
+        <div class="fav-actions">
+          <button type="button" class="icon-btn rec" title="Copiar recomendación" onclick="recommendFavorite(${item.id})">
+            <i class="fas fa-share"></i>
+          </button>
+          <button type="button" class="icon-btn del" title="Quitar" onclick="deleteFavorite(${item.id})">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   function shareApp() {
     if (navigator.share) {
       navigator.share({ title: "Hikari Play", url: window.location.origin }).catch(() => {});
     } else {
-      alert("Enlace de Hikari Play listo para compartir.");
+      showToast("Enlace de Hikari Play listo para compartir");
     }
+  }
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const el = document.getElementById("toastMsg");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
   }
 </script>
 </body>
