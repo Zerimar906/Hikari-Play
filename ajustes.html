@@ -7,10 +7,7 @@
 <title>Ajustes y Cuenta - Hikari Play</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="img/Logo.png">
-<link rel="stylesheet" href="./css/ajustes.css">
-<meta name="theme-color" content="#0b0c10">
+<link rel="stylesheet" href="css/ajustes.css">
 </head>
 <body>
 
@@ -32,27 +29,24 @@
         <div id="accId" class="hero-id">ID: 00000000</div>
       </div>
     </div>
-    <button type="button" class="hero-bell" title="Notificaciones" onclick="showToast('No tienes notificaciones nuevas')">
-      <i class="far fa-bell"></i>
-    </button>
+
+    <div class="hero-actions">
+      <button type="button" class="hero-icon-btn fav-ico" title="Ir a Favoritos" onclick="document.getElementById('favoritosSec').scrollIntoView({behavior:'smooth'})">
+        <i class="fas fa-heart"></i>
+      </button>
+      <button type="button" class="hero-icon-btn hist-ico" title="Ir a Historial" onclick="document.getElementById('historialSec').scrollIntoView({behavior:'smooth'})">
+        <i class="far fa-clock"></i>
+      </button>
+      <button type="button" class="hero-icon-btn share-ico" title="Compartir" onclick="shareApp()">
+        <i class="fas fa-share-alt"></i>
+      </button>
+      <button type="button" class="hero-icon-btn" title="Notificaciones" onclick="showToast('No tienes notificaciones nuevas')">
+        <i class="far fa-bell"></i>
+      </button>
+    </div>
   </section>
 
-  <section class="quick-grid">
-    <button type="button" class="quick-card fav" onclick="document.getElementById('favoritosSec').scrollIntoView({behavior:'smooth'})">
-      <i class="fas fa-heart"></i>
-      <span>Favoritos</span>
-    </button>
-    <button type="button" class="quick-card hist" onclick="document.getElementById('historialSec').scrollIntoView({behavior:'smooth'})">
-      <i class="far fa-clock"></i>
-      <span>Historial</span>
-    </button>
-    <button type="button" class="quick-card share" onclick="shareApp()">
-      <i class="fas fa-share-alt"></i>
-      <span>Compartir</span>
-    </button>
-  </section>
-
-  <!-- Carril de Favoritos (poblado desde el botón de velero en la descripción de cada película) -->
+  <!-- Carril de Favoritos -->
   <section id="favoritosSec">
     <div class="section-head">
       <h2 class="section-title">Favoritos</h2>
@@ -65,10 +59,12 @@
   <section id="historialSec">
     <div class="section-head">
       <h2 class="section-title">Historial reciente</h2>
-      <a href="index.html" class="section-link">Explorar &gt;</a>
+      <a href="anime.html" class="section-link">Explorar &gt;</a>
     </div>
     <div id="historyList" class="rail-row">
       <div class="rail-card">
+        <div class="rail-poster">Sin historial reciente</div>
+        <div class="rail-title">Empieza a ver algo</div>
       </div>
     </div>
   </section>
@@ -286,52 +282,7 @@
 
   function setFavorites(list) {
     localStorage.setItem("hikariFavorites", JSON.stringify(list));
-    if (typeof renderFavoritesRail === "function") {
-      renderFavoritesRail();
-    }
-  }
-
-  function isMovieFavorite(idOrTitle) {
-    const list = getFavorites();
-    return list.some(item => String(item.id) === String(idOrTitle) || item.title === idOrTitle);
-  }
-
-  /* Llamar desde el botón en forma de velero en la descripción de la película */
-  function toggleFavoriteMovie(movie, btnEl) {
-    if (!movie || !movie.title) return;
-    const movieId = movie.id || movie.title;
-    const list = getFavorites();
-    const existsIndex = list.findIndex(item => String(item.id) === String(movieId) || item.title === movie.title);
-
-    let savedNow = false;
-    if (existsIndex >= 0) {
-      list.splice(existsIndex, 1);
-      showToast("Quitado de Favoritos");
-    } else {
-      list.unshift({
-        id: movieId,
-        title: movie.title,
-        type: movie.type || "Película",
-        poster: movie.poster || "",
-        url: movie.url || ""
-      });
-      savedNow = true;
-      showToast("Guardado en Favoritos");
-    }
-
-    setFavorites(list);
-    if (btnEl) {
-      syncSailButtonState(btnEl, savedNow);
-    }
-  }
-
-  function syncSailButtonState(btnEl, saved) {
-    if (!btnEl) return;
-    btnEl.classList.toggle("saved", !!saved);
-    const label = btnEl.querySelector(".sail-label");
-    if (label) {
-      label.textContent = saved ? "Guardado" : "Favoritos";
-    }
+    renderFavoritesRail();
   }
 
   function removeFavoriteById(id) {
@@ -369,7 +320,7 @@
       rail.innerHTML = `
         <div class="rail-card">
           <div class="rail-poster">Sin favoritos aún</div>
-          <div class="rail-title">Usa el botón velero</div>
+          <div class="rail-title">Guarda desde una ficha</div>
         </div>
       `;
       return;
