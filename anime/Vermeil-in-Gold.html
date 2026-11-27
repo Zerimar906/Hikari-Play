@@ -13,6 +13,103 @@
 <link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#0f0f0f">
 <link rel="apple-touch-icon" href="../img/Logo.png">
+
+<style>
+  .ConjuntoHeadCont {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+  }
+
+  .movie-head-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .movie-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Botón de Me gusta con contador */
+  .like-counter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    background: #151922;
+    color: #f3f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .like-counter-btn:hover {
+    background: #1c2230;
+    transform: translateY(-1px);
+  }
+
+  .like-counter-btn.liked {
+    background: rgba(255, 59, 92, 0.16);
+    border-color: #ff3b5c;
+    color: #ff6b84;
+  }
+
+  .like-counter-btn .like-count {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+  }
+
+  .like-counter-btn.liked .like-count {
+    background: rgba(255, 59, 92, 0.24);
+    color: #fff;
+  }
+
+  /* Botón de Favoritos en forma de velero */
+  .sail-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    background: #151922;
+    color: #f3f5f9;
+    border: 1px solid rgba(64, 121, 255, 0.35);
+    border-radius: 14px 14px 4px 4px;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sail-save-btn svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+  }
+
+  .sail-save-btn:hover {
+    background: #1c2230;
+    transform: translateY(-1px);
+  }
+
+  .sail-save-btn.saved {
+    background: rgba(64, 121, 255, 0.18);
+    border-color: #4079ff;
+    color: #8ab2ff;
+  }
+</style>
 </head>
 <body class="drK" id='mainCont'>
 <script>localStorage.setItem('mode', 'darkmode');</script>
@@ -27,7 +124,20 @@
     <div class="SingleHead">
         <img src="../img/Vermeil-in-Gold.jpg" alt="Vermeil in Gold" title="Vermeil in Gold">
     </div>
-    <span class="movie-section-title">Vermeil in Gold</span>
+
+    <div class="movie-head-info">
+        <span class="movie-section-title">Vermeil in Gold</span>
+
+        <div class="movie-action-row">
+            <button type="button" id="btnMovieLike" class="like-counter-btn" onclick="toggleMovieLike()">
+                <i class="bi bi-heart"></i>
+                <span id="movieLikeCount" class="like-count">0</span>
+            </button>
+            <button type="button" id="btnMovieSail" class="sail-save-btn" onclick="toggleMovieFavorite()">
+                <i class="bi bi-bookmark"></i>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div style="clear: both;"></div>
