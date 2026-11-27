@@ -109,7 +109,6 @@
     margin-top: 2px;
   }
 
-  /* Botones rápidos al lado de Notificación */
   .hero-actions {
     display: flex;
     align-items: center;
@@ -139,8 +138,6 @@
     transform: translateY(-1px);
   }
 
-  .hero-icon-btn.fav-ico i { color: #ff5c77; }
-  .hero-icon-btn.hist-ico i { color: #6ea0ff; }
   .hero-icon-btn.share-ico i { color: #34c759; }
 
   .section-head {
